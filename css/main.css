@@ -1,0 +1,272 @@
+/* ==========================================================================
+   Design tokens — Neo-Classical Retro / Film-Stock system
+   Marble & ivory surfaces, muted terracotta/olive/brass accents, serif
+   display type, grain + vignette + halation instead of neon glow.
+   ========================================================================== */
+
+:root {
+  /* --- Surface & ink (light / default — marble gallery) --- */
+  --surface-0: #efe9dd;        /* ivory marble base */
+  --surface-1: #f6f2e8;        /* raised card surface */
+  --surface-2: #e5ddc9;        /* recessed / hairline fill */
+  --ink-0: #211d1a;            /* primary text — near-black warm */
+  --ink-1: #4a423a;            /* secondary text */
+  --ink-2: #7a7062;            /* tertiary / meta text */
+  --border-hairline: rgba(33, 29, 26, 0.14);
+  --border-hairline-strong: rgba(33, 29, 26, 0.24);
+
+  /* --- Accents (muted retro, not neon) --- */
+  --accent-terracotta: #b5502e;
+  --accent-terracotta-soft: rgba(181, 80, 46, 0.14);
+  --accent-olive: #6e7350;
+  --accent-olive-soft: rgba(110, 115, 80, 0.14);
+  --accent-brass: #b08d3e;
+  --accent-brass-soft: rgba(176, 141, 62, 0.16);
+
+  /* --- Status (kept muted, same family) --- */
+  --status-live: var(--accent-olive);
+  --status-preview: var(--accent-brass);
+  --status-simulated: var(--accent-terracotta);
+
+  /* --- Typography --- */
+  --font-display: "Playfair Display", "Iowan Old Style", "Georgia", serif;
+  --font-body: "Space Grotesk", "Inter", -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --fs-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+  --fs-h1: clamp(1.9rem, 2.4vw + 1rem, 2.75rem);
+  --fs-h2: clamp(1.4rem, 1.2vw + 1rem, 1.9rem);
+  --fs-h3: 1.15rem;
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem;
+
+  /* --- Spacing scale --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* --- Shape & elevation --- */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --shadow-tablet: 0 1px 2px rgba(33, 29, 26, 0.06), 0 8px 24px -12px rgba(33, 29, 26, 0.18);
+  --shadow-tablet-hover: 0 2px 4px rgba(33, 29, 26, 0.08), 0 16px 36px -14px rgba(33, 29, 26, 0.26);
+
+  /* --- Halation (hover highlight, warm bloom instead of neon glow) --- */
+  --halation-terracotta: 0 0 0 1px rgba(181, 80, 46, 0.35), 0 0 24px -4px rgba(181, 80, 46, 0.45);
+  --halation-brass: 0 0 0 1px rgba(176, 141, 62, 0.35), 0 0 24px -4px rgba(176, 141, 62, 0.45);
+
+  /* --- Motion --- */
+  --ease-film: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-base: 240ms;
+
+  color-scheme: light;
+}
+
+/* --- Dark variant: "unlit gallery" — same warm cast, not OLED black --- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface-0: #211d1a;
+    --surface-1: #292420;
+    --surface-2: #35302a;
+    --ink-0: #f2ece0;
+    --ink-1: #cfc6b6;
+    --ink-2: #9a9184;
+    --border-hairline: rgba(242, 236, 224, 0.12);
+    --border-hairline-strong: rgba(242, 236, 224, 0.2);
+    --shadow-tablet: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+    --shadow-tablet-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 36px -14px rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --surface-0: #211d1a;
+  --surface-1: #292420;
+  --surface-2: #35302a;
+  --ink-0: #f2ece0;
+  --ink-1: #cfc6b6;
+  --ink-2: #9a9184;
+  --border-hairline: rgba(242, 236, 224, 0.12);
+  --border-hairline-strong: rgba(242, 236, 224, 0.2);
+  --shadow-tablet: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --shadow-tablet-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 36px -14px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--surface-0);
+  color: var(--ink-0);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  min-height: 100vh;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 var(--space-3);
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: var(--fs-h1);
+}
+h2 {
+  font-size: var(--fs-h2);
+}
+h3 {
+  font-size: var(--fs-h3);
+}
+
+p {
+  margin: 0 0 var(--space-4);
+  color: var(--ink-1);
+}
+
+code,
+pre,
+kbd {
+  font-family: var(--font-mono);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-terracotta);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   Film-stock texture layer — grain + vignette
+   ========================================================================== */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(33, 29, 26, 0.1) 100%
+  );
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Layout primitives
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+.section {
+  padding-block: var(--space-8);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-terracotta);
+}
+
+.hr-hairline {
+  border: none;
+  border-top: 1px solid var(--border-hairline);
+  margin: var(--space-6) 0;
+}
