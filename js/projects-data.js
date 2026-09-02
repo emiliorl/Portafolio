@@ -13,6 +13,10 @@
  *   - mindful-01 / -02 / -03            — phone screens
  *   - mindshield-01 / -02 / -03         — phone screens
  *
+ * TECH-STACK ICONS: each `languages`/earlierWork entry may carry an `icon`
+ * slug matching a file under `assets/icons/<slug>.svg` (medallion-style,
+ * generated — see PHASE.md Phase 5). Omit `icon` to render a text-only pill.
+ *
  * TIERING (Review Notes #6, confirmed): only finished, recent work is listed
  * as a Primary Feature. Other private repos exist but are still being
  * polished — deliberately out of scope until the user is ready to add them;
@@ -84,7 +88,7 @@ export const projects = [
       "A full-stack operations web app for a real company, built with a modern TypeScript stack and deployed on Vercel.",
     category: "web",
     languages: [
-      { label: "TypeScript", tone: "brass" },
+      { label: "TypeScript", tone: "brass", icon: "typescript" },
       { label: "Web", tone: "muted" },
     ],
     capability: "webEmbed",
@@ -106,9 +110,9 @@ export const projects = [
       "A multi-agent system (CrewAI orchestration, LiteLLM-routed LLM calls) that audits clinical records for coding gaps and documentation issues. The sandbox below runs a self-contained, pure-Python distillation of the scoring logic against synthetic sample records — the full agent pipeline requires a live LLM API key and isn't run client-side.",
     category: "python",
     languages: [
-      { label: "Python", tone: "olive" },
-      { label: "CrewAI", tone: "muted" },
-      { label: "AI/Agents", tone: "muted" },
+      { label: "Python", tone: "olive", icon: "python" },
+      { label: "CrewAI", tone: "muted", icon: "crewai" },
+      { label: "AI/Agents", tone: "muted", icon: "ai-agents" },
     ],
     capability: "sandbox",
     github: "https://github.com/emiliorl/Multi-Agent-Clinical-Auditor",
@@ -132,8 +136,8 @@ export const projects = [
       "An Android app supporting mental health and wellbeing routines, built with Kotlin and modern Jetpack Compose UI.",
     category: "android",
     languages: [
-      { label: "Kotlin", tone: "olive" },
-      { label: "Jetpack Compose", tone: "muted" },
+      { label: "Kotlin", tone: "olive", icon: "kotlin" },
+      { label: "Jetpack Compose", tone: "muted", icon: "jetpack-compose" },
     ],
     capability: "devicePreview",
     github: "https://github.com/emiliorl/Mindful",
@@ -157,8 +161,8 @@ export const projects = [
       "A digital wellness app that helps curb compulsive engagement patterns, using Android's Accessibility API to detect and gently interrupt problem usage.",
     category: "android",
     languages: [
-      { label: "Kotlin", tone: "olive" },
-      { label: "Android", tone: "muted" },
+      { label: "Kotlin", tone: "olive", icon: "kotlin" },
+      { label: "Android", tone: "muted", icon: "android" },
     ],
     capability: "devicePreview",
     github: "https://github.com/emiliorl/MindShield",
@@ -181,7 +185,7 @@ export const projects = [
     description:
       "A full-stack project demonstrating end-to-end development ability. This repository is private, so its source, live stats, and sandbox aren't fetchable from this static site — details here are entered by hand and screenshots are placeholders until the user supplies real ones.",
     category: "web",
-    languages: [{ label: "Full-Stack", tone: "terracotta" }],
+    languages: [{ label: "Full-Stack", tone: "terracotta", icon: "fullstack" }],
     capability: "manual",
     github: null,
     requirements: {
@@ -198,11 +202,11 @@ export const projects = [
  * mislabeled "Java" in the original plan; they are JavaScript/HTML/CSS.
  */
 export const earlierWork = [
-  { name: "Pro-Ctrl-Back-End", language: "JavaScript", github: "https://github.com/emiliorl/Pro-Ctrl-Back-End" },
-  { name: "Pro-Ctrl-Front-End", language: "HTML", github: "https://github.com/emiliorl/Pro-Ctrl-Front-End" },
-  { name: "DBSTermProject", language: "JavaScript", github: "https://github.com/emiliorl/DBSTermProject" },
-  { name: "GestorDeHoteles", language: "JavaScript", github: "https://github.com/emiliorl/GestorDeHoteles" },
-  { name: "torneoDeportes-Back-End", language: "JavaScript", github: "https://github.com/emiliorl/torneoDeportes-Back-End" },
-  { name: "VentaOnline", language: "JavaScript", github: "https://github.com/emiliorl/VentaOnline" },
-  { name: "Calculator", language: "Java", github: "https://github.com/emiliorl/Calculator" },
+  { name: "Pro-Ctrl-Back-End", language: "JavaScript", icon: "javascript", github: "https://github.com/emiliorl/Pro-Ctrl-Back-End" },
+  { name: "Pro-Ctrl-Front-End", language: "HTML", icon: "html", github: "https://github.com/emiliorl/Pro-Ctrl-Front-End" },
+  { name: "DBSTermProject", language: "JavaScript", icon: "javascript", github: "https://github.com/emiliorl/DBSTermProject" },
+  { name: "GestorDeHoteles", language: "JavaScript", icon: "javascript", github: "https://github.com/emiliorl/GestorDeHoteles" },
+  { name: "torneoDeportes-Back-End", language: "JavaScript", icon: "javascript", github: "https://github.com/emiliorl/torneoDeportes-Back-End" },
+  { name: "VentaOnline", language: "JavaScript", icon: "javascript", github: "https://github.com/emiliorl/VentaOnline" },
+  { name: "Calculator", language: "Java", icon: "java", github: "https://github.com/emiliorl/Calculator" },
 ];
