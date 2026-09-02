@@ -173,7 +173,15 @@ function createProjectCard(project) {
   project.languages.forEach((lang) => {
     const pill = document.createElement("span");
     pill.className = `pill ${pillToneClass(lang.tone)}`;
-    pill.textContent = lang.label;
+    if (lang.icon) {
+      const icon = document.createElement("img");
+      icon.className = "pill__icon";
+      icon.src = `assets/icons/${lang.icon}.svg`;
+      icon.alt = "";
+      icon.loading = "lazy";
+      pill.appendChild(icon);
+    }
+    pill.appendChild(document.createTextNode(lang.label));
     pillRow.appendChild(pill);
   });
 
@@ -252,7 +260,10 @@ function renderEarlierWork() {
     a.href = item.github;
     a.target = "_blank";
     a.rel = "noopener";
-    a.innerHTML = `<h4>${item.name}</h4><span>${item.language}</span>`;
+    const iconTag = item.icon
+      ? `<img class="pill__icon" src="assets/icons/${item.icon}.svg" alt="" loading="lazy" />`
+      : "";
+    a.innerHTML = `<h4>${item.name}</h4><span>${iconTag}${item.language}</span>`;
     earlierWorkList.appendChild(a);
   });
 }

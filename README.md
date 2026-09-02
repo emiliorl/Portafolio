@@ -3,6 +3,9 @@
 Emilio Ramirez's personal portfolio — a zero-dependency, static HTML/CSS/ES6 site showcasing
 projects across web, Python, and Kotlin/Android, with live client-side sandboxes.
 
+- **[PLAN.md](PLAN.md)** — the full project plan (visual identity, architecture, project registry, constraints, verification checklist). Read this first.
+- **[PHASE.md](PHASE.md)** — what's being worked on right now, and the phase-by-phase build log.
+
 ## Stack
 
 - Vanilla HTML5 / CSS3 (custom properties, no build step) / ES6 modules

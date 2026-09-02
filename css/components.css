@@ -331,6 +331,19 @@
   opacity: 0.7;
 }
 
+.pill__icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+}
+
+.earlier-work__item .pill__icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  vertical-align: -0.15em;
+  margin-right: 0.3em;
+}
+
 .capability {
   display: inline-flex;
   align-items: center;
