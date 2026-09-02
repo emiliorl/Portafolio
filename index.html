@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emilio Ramirez — Portfolio</title>
+  <meta name="description" content="Full-stack developer portfolio — Python, TypeScript/React, and Kotlin/Android projects with live in-browser sandboxes and previews." />
+  <meta name="color-scheme" content="light dark" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%9B%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./css/main.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <link rel="stylesheet" href="./css/sandbox.css" />
+</head>
+<body>
+  <a class="visually-hidden" href="#main">Skip to content</a>
+
+  <div id="app">
+    <header class="site-header">
+      <div class="container site-header__bar">
+        <a class="brand" href="#main">
+          <span class="brand__mark">◆</span> Emilio Ramirez
+        </a>
+        <nav class="site-nav" aria-label="Primary">
+          <a href="#work">Work</a>
+          <a href="#earlier-work">Earlier Work</a>
+          <a href="https://github.com/emiliorl" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="section hero container">
+        <p class="eyebrow">Full-Stack Developer</p>
+        <h1 class="hero__title">Projects, in the open — run them, don't just read about them.</h1>
+        <p class="hero__lede">
+          A working showcase of Python, web, and Android projects. Launch a real
+          in-browser Python sandbox, preview live web apps at any viewport, or
+          step through a mobile app's screens — no install required.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#work">Browse Projects</a>
+          <a class="btn btn--ghost" href="https://github.com/emiliorl" target="_blank" rel="noopener">View GitHub Profile</a>
+        </div>
+      </section>
+
+      <section id="work" class="container">
+        <div class="toolbar">
+          <div class="search-field">
+            <span class="search-field__icon" aria-hidden="true">⌕</span>
+            <label class="visually-hidden" for="search-input">Search projects</label>
+            <input id="search-input" type="search" placeholder="Search projects…" autocomplete="off" />
+            <kbd>/</kbd>
+          </div>
+          <div class="filter-tabs" id="filter-tabs" role="group" aria-label="Filter by category">
+            <button class="filter-tab" type="button" data-filter="all" aria-pressed="true">All</button>
+            <button class="filter-tab" type="button" data-filter="python" aria-pressed="false">Python</button>
+            <button class="filter-tab" type="button" data-filter="web" aria-pressed="false">Web</button>
+            <button class="filter-tab" type="button" data-filter="android" aria-pressed="false">Android</button>
+          </div>
+        </div>
+
+        <div class="project-grid" id="project-grid" aria-live="polite">
+          <!-- Populated by js/app.js from js/projects-data.js -->
+        </div>
+      </section>
+
+      <section id="earlier-work" class="section container">
+        <h2>Earlier Work</h2>
+        <p class="hero__lede" style="max-width: 60ch">
+          Early student projects — kept for context, not actively maintained.
+        </p>
+        <div class="earlier-work" id="earlier-work-list">
+          <!-- Populated by js/app.js -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer container">
+      <span>© <span id="year"></span> Emilio Ramirez</span>
+      <span>
+        <a href="mailto:emilio.alejandrorl19@gmail.com">Email</a>
+        · <a href="https://github.com/emiliorl" target="_blank" rel="noopener">GitHub</a>
+      </span>
+    </footer>
+  </div>
+
+  <div id="modal-root" aria-live="polite"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,307 @@
+/* ==========================================================================
+   Modal shell, sandbox terminal, viewport switcher, device carousel
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 17, 14, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-film);
+}
+
+.modal-backdrop.is-open {
+  opacity: 1;
+}
+
+.modal {
+  width: min(920px, 100%);
+  max-height: min(88vh, 820px);
+  background: var(--surface-1);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-tablet-hover);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  translate: 0 8px;
+  transition: translate var(--dur-base) var(--ease-film);
+}
+
+.modal-backdrop.is-open .modal {
+  translate: 0 0;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.modal__close {
+  background: transparent;
+  border: 1px solid var(--border-hairline-strong);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.modal__close:hover {
+  border-color: var(--accent-terracotta);
+  color: var(--accent-terracotta);
+}
+
+.modal__tabs {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-5) 0;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.modal__tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.modal__tab[aria-selected="true"] {
+  color: var(--accent-terracotta);
+  border-bottom-color: var(--accent-terracotta);
+}
+
+.modal__body {
+  padding: var(--space-5);
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* --- Python sandbox --- */
+.sandbox-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.sandbox-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  color: var(--ink-2);
+}
+
+.sandbox-status__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--ink-2);
+}
+
+.sandbox-status[data-state="loading"] .sandbox-status__dot {
+  background: var(--accent-brass);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+.sandbox-status[data-state="ready"] .sandbox-status__dot {
+  background: var(--accent-olive);
+}
+
+.sandbox-status[data-state="error"] .sandbox-status__dot {
+  background: var(--accent-terracotta);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.code-editor {
+  width: 100%;
+  min-height: 220px;
+  resize: vertical;
+  background: var(--surface-2);
+  color: var(--ink-0);
+  border: 1px solid var(--border-hairline-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  tab-size: 4;
+}
+
+.terminal {
+  margin-top: var(--space-4);
+  background: #211d1a;
+  color: #e8dfc9;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  max-height: 240px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminal .err {
+  color: #d98a70;
+}
+.terminal .ok {
+  color: #b7bd93;
+}
+
+/* --- Web viewport preview --- */
+.viewport-switcher {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.viewport-switcher button {
+  border: 1px solid var(--border-hairline-strong);
+  background: var(--surface-1);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.7rem;
+  font-size: var(--fs-micro);
+  cursor: pointer;
+}
+
+.viewport-switcher button[aria-pressed="true"] {
+  background: var(--accent-brass);
+  color: #fbf6ec;
+  border-color: var(--accent-brass);
+}
+
+.viewport-frame {
+  margin-top: var(--space-4);
+  border: 1px solid var(--border-hairline-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-2);
+  transition: max-width var(--dur-base) var(--ease-film);
+  margin-inline: auto;
+}
+
+.viewport-frame iframe {
+  width: 100%;
+  height: 520px;
+  border: 0;
+  background: #fff;
+  display: block;
+}
+
+.viewport-frame[data-size="desktop"] {
+  max-width: 100%;
+}
+.viewport-frame[data-size="tablet"] {
+  max-width: 768px;
+}
+.viewport-frame[data-size="mobile"] {
+  max-width: 375px;
+}
+
+.viewport-fallback {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--ink-2);
+}
+
+/* --- Device screenshot carousel --- */
+.carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.carousel__controls button {
+  background: transparent;
+  border: 1px solid var(--border-hairline-strong);
+  border-radius: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  cursor: pointer;
+}
+
+.carousel__caption {
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+  text-align: center;
+  max-width: 40ch;
+}
+
+/* --- Endpoint / API simulator --- */
+.endpoint-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.endpoint-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+}
+
+.endpoint-item .method {
+  font-weight: 700;
+  color: var(--accent-olive);
+}
+
+.endpoint-item[aria-selected="true"] {
+  border-color: var(--accent-olive);
+}
+
+@media (max-width: 640px) {
+  .modal {
+    max-height: 94vh;
+  }
+  .viewport-frame[data-size="tablet"],
+  .viewport-frame[data-size="desktop"] {
+    max-width: 100%;
+  }
+}
