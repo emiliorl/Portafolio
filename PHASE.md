@@ -6,10 +6,10 @@ Legend: ✅ done · 🔄 in progress · ⬜ planned · 🚫 blocked
 
 ## Current Phase
 
-⬜ **Phase 6 — Accessibility & polish pass**
-Contrast check against the marble/charcoal palette, keyboard-only walkthrough
-(tab order, modal focus trap already built in Phase 4 — verify it end to end),
-`prefers-reduced-motion` coverage, and general visual QA.
+⬜ **Phase 7 — Real asset swap-in** (🚫 blocked on user)
+Waiting on real screenshots for the Primary Feature projects and any
+finished private repos the user wants added. See the placeholder-asset
+convention documented in `js/projects-data.js`.
 
 ## Phase Log
 
@@ -21,8 +21,47 @@ Contrast check against the marble/charcoal palette, keyboard-only walkthrough
 | 3 | Project data layer + placeholder screenshots | ✅ | `6caccf0` |
 | 4 | Interactivity — render/filter/search, modal manager, web/device previews, Pyodide sandbox, GitHub live sync | ✅ | `85ac8c0` |
 | 5 | Tech-stack icon set (`assets/icons/`, wired into pills + Earlier Work) | ✅ | — |
-| 6 | Accessibility & polish pass (contrast, focus order, reduced-motion) | 🔄 | — |
+| 6 | Accessibility & polish pass (contrast, focus order, skip link, reduced-motion) | ✅ | — |
 | 7 | Real asset swap-in (placeholder → real screenshots) | 🚫 blocked on user | — |
+
+**Phase 6 findings & fixes** (contrast computed via the WCAG relative-luminance
+formula, not eyeballed):
+- `.viewport-switcher` pressed button (white text on brass) measured **2.9:1** —
+  real AA failure. Fixed by using a fixed dark ink on brass fills instead
+  (`--ink-on-accent`), since the brass/olive/terracotta accents don't flip
+  between themes but white text on them can fail either way.
+- Added `--accent-{terracotta,olive,brass}-text` tokens (theme-aware, ≥4.5:1
+  against both surface levels) for every place an accent colors *small running
+  text* — eyebrow, nav/footer link hover, pill labels, active modal tab. The
+  raw `--accent-*` tokens stay for large/decorative use (buttons, borders, dots)
+  where the non-text 3:1 threshold applies instead.
+- Darkened `--ink-2` (`#7A7062` → `#71685B`) — was 4.02:1 on surface-0, under
+  the 4.5:1 small-text requirement.
+- Skip-link was using `.visually-hidden`, which never reappears — added a
+  dedicated `.skip-link` class that's off-screen by default and shows on
+  `:focus`.
+- Theme toggle now reflects state via `aria-pressed` + a state-describing
+  `aria-label`, instead of a static "Toggle dark mode".
+- Icon-prefixed buttons (Launch Sandbox, Inspect, etc.) had raw emoji in the
+  accessible name (e.g. "▶ Launch Sandbox" read as "play button Launch
+  Sandbox"); wrapped the icon in `aria-hidden` so only the label is announced.
+- Modal tabs now follow the full WAI-ARIA tabs pattern — `role="tabpanel"`,
+  `aria-controls`/`aria-labelledby`, roving `tabindex` + arrow-key navigation
+  — and the modal's focus-trap query was fixed to actually respect
+  `tabindex="-1"` (it previously trapped focus on inactive tab buttons too)
+  and to include `<summary>` (natively focusable, wasn't matched before).
+- Removed dead `.endpoint-item`/`.endpoint-list` CSS — leftover from the
+  original "Backend Simulator" idea that Review Notes #1/#6 retired in favor
+  of the Earlier Work strip; no JS ever created these elements.
+
+Verified in a headless browser: contrast fixes render correctly (brass
+pressed-button screenshot confirms dark-on-brass), ARIA tabs pattern
+(arrow-key nav, roving tabindex, panel wiring) works end to end, theme
+toggle's `aria-pressed`/`aria-label` sync on click. The `.skip-link:focus`
+CSS rule was verified by direct stylesheet inspection rather than a live
+screenshot — headless Puppeteer's page never receives real OS-level focus
+(`document.hasFocus()` is false even after `element.focus()`), so `:focus`
+never visually engages in that environment regardless of correctness.
 
 Phase 4 was verified in a headless browser before merging to `main`: filtering,
 search, modal focus-trap/Esc, device carousel + tabs, web viewport switcher

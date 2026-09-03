@@ -48,7 +48,7 @@
 }
 
 .site-nav a:hover {
-  color: var(--accent-terracotta);
+  color: var(--accent-terracotta-text);
 }
 
 .theme-toggle {
@@ -312,19 +312,19 @@
 .pill--terracotta {
   background: var(--accent-terracotta-soft);
   border-color: rgba(181, 80, 46, 0.35);
-  color: var(--accent-terracotta);
+  color: var(--accent-terracotta-text);
 }
 
 .pill--olive {
   background: var(--accent-olive-soft);
   border-color: rgba(110, 115, 80, 0.35);
-  color: var(--accent-olive);
+  color: var(--accent-olive-text);
 }
 
 .pill--brass {
   background: var(--accent-brass-soft);
   border-color: rgba(176, 141, 62, 0.35);
-  color: var(--accent-brass);
+  color: var(--accent-brass-text);
 }
 
 .pill--muted {
@@ -517,7 +517,7 @@
 }
 
 .site-footer a:hover {
-  color: var(--accent-terracotta);
+  color: var(--accent-terracotta-text);
 }
 
 /* --- Empty state --- */

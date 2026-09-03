@@ -68,7 +68,7 @@
 
 .modal__close:hover {
   border-color: var(--accent-terracotta);
-  color: var(--accent-terracotta);
+  color: var(--accent-terracotta-text);
 }
 
 .modal__tabs {
@@ -89,7 +89,7 @@
 }
 
 .modal__tab[aria-selected="true"] {
-  color: var(--accent-terracotta);
+  color: var(--accent-terracotta-text);
   border-bottom-color: var(--accent-terracotta);
 }
 
@@ -197,7 +197,9 @@
 
 .viewport-switcher button[aria-pressed="true"] {
   background: var(--accent-brass);
-  color: #fbf6ec;
+  /* Fixed dark ink, not #fbf6ec white — white-on-brass only hits 2.9:1,
+     well under WCAG AA. See PHASE.md Phase 6. */
+  color: var(--ink-on-accent);
   border-color: var(--accent-brass);
 }
 
@@ -263,37 +265,6 @@
   color: var(--ink-2);
   text-align: center;
   max-width: 40ch;
-}
-
-/* --- Endpoint / API simulator --- */
-.endpoint-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-.endpoint-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3);
-  border: 1px solid var(--border-hairline);
-  border-radius: var(--radius-md);
-  background: var(--surface-2);
-  cursor: pointer;
-  text-align: left;
-  font-family: var(--font-mono);
-  font-size: var(--fs-small);
-}
-
-.endpoint-item .method {
-  font-weight: 700;
-  color: var(--accent-olive);
-}
-
-.endpoint-item[aria-selected="true"] {
-  border-color: var(--accent-olive);
 }
 
 @media (max-width: 640px) {
