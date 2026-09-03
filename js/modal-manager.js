@@ -10,9 +10,9 @@ let lastFocused = null;
 function getFocusable(container) {
   return Array.from(
     container.querySelectorAll(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      'a[href], button:not([disabled]), textarea, input, select, summary, [tabindex]'
     )
-  ).filter((el) => el.offsetParent !== null);
+  ).filter((el) => el.offsetParent !== null && el.getAttribute("tabindex") !== "-1");
 }
 
 function handleKeydown(e) {
@@ -118,28 +118,57 @@ export function buildTabs(tabs) {
 
   const panels = {};
   const panelsEl = document.createElement("div");
+  const order = tabs.map((t) => t.id);
+  const uid = Math.random().toString(36).slice(2, 8);
 
   tabs.forEach((tab, i) => {
+    const tabId = `tab-${uid}-${tab.id}`;
+    const panelId = `panel-${uid}-${tab.id}`;
+
     const btn = document.createElement("button");
     btn.className = "modal__tab";
     btn.type = "button";
+    btn.id = tabId;
     btn.setAttribute("role", "tab");
     btn.setAttribute("aria-selected", i === 0 ? "true" : "false");
+    btn.setAttribute("aria-controls", panelId);
+    btn.tabIndex = i === 0 ? 0 : -1;
     btn.textContent = tab.label;
-    btn.addEventListener("click", () => setActive(tab.id));
+    btn.addEventListener("click", () => setActive(tab.id, { focus: false }));
+    btn.addEventListener("keydown", (e) => handleTabKeydown(e, tab.id));
     tabsEl.appendChild(btn);
 
+    tab.panel.id = panelId;
+    tab.panel.setAttribute("role", "tabpanel");
+    tab.panel.setAttribute("aria-labelledby", tabId);
     tab.panel.hidden = i !== 0;
     panels[tab.id] = { btn, panel: tab.panel };
     panelsEl.appendChild(tab.panel);
   });
 
-  function setActive(id) {
+  function setActive(id, { focus = true } = {}) {
     Object.entries(panels).forEach(([key, { btn, panel }]) => {
       const active = key === id;
       btn.setAttribute("aria-selected", String(active));
+      btn.tabIndex = active ? 0 : -1;
       panel.hidden = !active;
+      if (active && focus) btn.focus();
     });
+  }
+
+  // WAI-ARIA tabs pattern: Left/Right (Home/End) move focus + selection
+  // between tabs — the native Tab key still just enters/exits the tablist.
+  function handleTabKeydown(e, currentId) {
+    const i = order.indexOf(currentId);
+    let next = null;
+    if (e.key === "ArrowRight") next = order[(i + 1) % order.length];
+    else if (e.key === "ArrowLeft") next = order[(i - 1 + order.length) % order.length];
+    else if (e.key === "Home") next = order[0];
+    else if (e.key === "End") next = order[order.length - 1];
+    if (next) {
+      e.preventDefault();
+      setActive(next);
+    }
   }
 
   return { tabsEl, panelsEl, setActive };

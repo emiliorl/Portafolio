@@ -11,7 +11,7 @@
   --surface-2: #e5ddc9;        /* recessed / hairline fill */
   --ink-0: #211d1a;            /* primary text — near-black warm */
   --ink-1: #4a423a;            /* secondary text */
-  --ink-2: #7a7062;            /* tertiary / meta text */
+  --ink-2: #71685b;            /* tertiary / meta text — darkened for 4.5:1 at small sizes, see Phase 6 */
   --border-hairline: rgba(33, 29, 26, 0.14);
   --border-hairline-strong: rgba(33, 29, 26, 0.24);
 
@@ -22,6 +22,23 @@
   --accent-olive-soft: rgba(110, 115, 80, 0.14);
   --accent-brass: #b08d3e;
   --accent-brass-soft: rgba(176, 141, 62, 0.16);
+
+  /* --- Text-safe accent variants ---
+     The raw accents above are tuned for large/decorative use (buttons,
+     borders, dots) and don't all clear 4.5:1 at the small sizes text
+     actually renders at (fs-micro/fs-small). Use these `-text` tokens
+     anywhere an accent colors *small runnning text* (links, eyebrows,
+     pill labels, active tab labels) — verified >=4.5:1 against both
+     surface-0 and surface-1 in each theme. See PHASE.md Phase 6. */
+  --accent-terracotta-text: #ab4b2b;
+  --accent-olive-text: #686c4b;
+  --accent-brass-text: #7c642c;
+
+  /* Fixed dark ink for text sitting on a solid accent-colored fill
+     (e.g. the brass "pressed" viewport button) — intentionally NOT a
+     theme-flipping token, since the accent fills themselves don't flip
+     between light/dark and white text on brass fails contrast (2.9:1). */
+  --ink-on-accent: #211d1a;
 
   /* --- Status (kept muted, same family) --- */
   --status-live: var(--accent-olive);
@@ -83,6 +100,9 @@
     --border-hairline-strong: rgba(242, 236, 224, 0.2);
     --shadow-tablet: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
     --shadow-tablet-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 36px -14px rgba(0, 0, 0, 0.6);
+    --accent-terracotta-text: #d37150;
+    --accent-olive-text: #909669;
+    --accent-brass-text: #bd9742;
     color-scheme: dark;
   }
 }
@@ -98,6 +118,9 @@
   --border-hairline-strong: rgba(242, 236, 224, 0.2);
   --shadow-tablet: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
   --shadow-tablet-hover: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 36px -14px rgba(0, 0, 0, 0.6);
+  --accent-terracotta-text: #d37150;
+  --accent-olive-text: #909669;
+  --accent-brass-text: #bd9742;
   color-scheme: dark;
 }
 
@@ -206,6 +229,28 @@ kbd {
   border-radius: var(--radius-sm);
 }
 
+/* Skip link: off-screen until focused, then becomes a visible, findable
+   button pinned to the top of the viewport (unlike .visually-hidden,
+   which — correctly — never reappears; a skip link must). */
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: var(--space-4);
+  z-index: 200;
+  background: var(--ink-0);
+  color: var(--surface-0);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  transition: top var(--dur-fast) var(--ease-film);
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+}
+
 /* ==========================================================================
    Film-stock texture layer — grain + vignette
    ========================================================================== */
@@ -262,7 +307,7 @@ body::after {
   font-size: var(--fs-micro);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent-terracotta);
+  color: var(--accent-terracotta-text);
 }
 
 .hr-hairline {

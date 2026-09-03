@@ -17,6 +17,18 @@ let activeQuery = "";
 /* Theme                                                                   */
 /* ---------------------------------------------------------------------- */
 
+function isDarkActive() {
+  const explicit = document.documentElement.getAttribute("data-theme");
+  if (explicit) return explicit === "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function syncThemeToggleA11y() {
+  const dark = isDarkActive();
+  themeToggle.setAttribute("aria-pressed", String(dark));
+  themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+}
+
 function initTheme() {
   try {
     const saved = localStorage.getItem("portfolio:theme");
@@ -24,19 +36,18 @@ function initTheme() {
   } catch {
     /* localStorage unavailable — fall back to system preference, no crash */
   }
+  syncThemeToggleA11y();
 }
 
 themeToggle.addEventListener("click", () => {
-  const current = document.documentElement.getAttribute("data-theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const currentlyDark = current ? current === "dark" : prefersDark;
-  const next = currentlyDark ? "light" : "dark";
+  const next = isDarkActive() ? "light" : "dark";
   document.documentElement.setAttribute("data-theme", next);
   try {
     localStorage.setItem("portfolio:theme", next);
   } catch {
     /* non-fatal */
   }
+  syncThemeToggleA11y();
 });
 
 /* ---------------------------------------------------------------------- */
@@ -64,13 +75,24 @@ function requirementsDrawer(requirements) {
   return details;
 }
 
+/** Sets a button's label as an aria-hidden decorative icon + real text,
+ * so screen readers announce just the label — not the emoji's Unicode
+ * name spoken inline ("play button Launch Sandbox"). */
+function setBtnLabel(btn, icon, label) {
+  btn.innerHTML = "";
+  const iconEl = document.createElement("span");
+  iconEl.setAttribute("aria-hidden", "true");
+  iconEl.textContent = icon;
+  btn.append(iconEl, document.createTextNode(" " + label));
+}
+
 function launchAction(project) {
   const btn = document.createElement("button");
   btn.className = "btn btn--primary btn--sm";
   btn.type = "button";
 
   if (project.capability === "sandbox") {
-    btn.textContent = "▶ Launch Sandbox";
+    setBtnLabel(btn, "▶", "Launch Sandbox");
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — Sandbox`,
@@ -78,7 +100,7 @@ function launchAction(project) {
       });
     });
   } else if (project.capability === "webEmbed") {
-    btn.textContent = "🌐 Launch Preview";
+    setBtnLabel(btn, "🌐", "Launch Preview");
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — Live Preview`,
@@ -86,7 +108,7 @@ function launchAction(project) {
       });
     });
   } else if (project.capability === "devicePreview") {
-    btn.textContent = "📱 Inspect";
+    setBtnLabel(btn, "📱", "Inspect");
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — Device Preview`,
@@ -94,8 +116,8 @@ function launchAction(project) {
       });
     });
   } else {
-    btn.textContent = "◆ Details";
     btn.className = "btn btn--ghost btn--sm";
+    setBtnLabel(btn, "◆", "Details");
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — Details`,
