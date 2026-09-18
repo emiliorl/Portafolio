@@ -52,13 +52,13 @@ assets/
 
 | Project | Category | Capability | Notes |
 |---|---|---|---|
-| IxMaOperations | Web | Live web embed | TypeScript, deployed at ixmaoperations.com |
-| Multi-Agent-Clinical-Auditor | Python | Pyodide sandbox | Runs a self-contained synthetic-data demo, **not** the real CrewAI/LiteLLM pipeline (that needs a live API key — never embedded client-side). Card media is a real screenshot of the project's own `reports/dashboard.html`, rendered with synthetic sample data |
+| IxMaOperations | Web | Live web embed | TypeScript, deployed at www.ixmaoperations.com |
+| Multi-Agent-Clinical-Auditor | Python | Notebook + Report | No longer a live sandbox (dropped per user request, 2026-09-17) — shown as a real screenshot of the project's own `reports/dashboard.html`, rendered with synthetic sample data, same static-report treatment as the notebook projects below. The real CrewAI/LiteLLM pipeline needs a live LLM API key, so it was never runnable client-side anyway |
 | Mindful | Android | Device preview | Kotlin / Jetpack Compose, Accessibility API. Supersedes an earlier project, MindShield (folded into this single entry — no separate MindShield card) |
 | Generative Models Trio | Python | Notebook + Report | VAE/DCGAN/Diffusion compared. Card media composited from the notebooks' own real output cells |
 | Cat/Dog CNN Comparison | Python | Notebook + Report | Card media is the notebook's actual training-curves output cell |
 | Hybrid ALPR | Python | Notebook + Report | No hosted demo yet — "lighter" static-report treatment, same as the two notebook repos above. Card media is a real slide from the project's own report |
-| codigogt | Web (Full-Stack) | Live web embed | Deployed at codigogt.vercel.app/directorio; **source repo is still private** (no GitHub stats/code link), but the live app embeds the same way as IxMaOperations |
+| codigogt | Web (Full-Stack) | Live web embed | Deployed at codigogt.vercel.app; **source repo is still private** (no GitHub stats/code link), but the live app embeds the same way as IxMaOperations |
 
 **Earlier Work strip** (link-only, no sandbox) — 2021 student projects: `Pro-Ctrl-Back-End`, `Pro-Ctrl-Front-End`, `DBSTermProject`, `GestorDeHoteles`, `torneoDeportes-Back-End`, `VentaOnline`, `Calculator`. (Corrected against the live GitHub API — several were mislabeled "Java" in early planning; they're JavaScript/HTML.)
 
@@ -66,8 +66,8 @@ Other private repos exist but are intentionally excluded until the user finishes
 
 ## Key Constraints (learned during planning — don't re-break these)
 
-1. **No secrets client-side, ever.** The clinical-auditor sandbox runs a trimmed pure-Python demo, not the real LLM pipeline, specifically to avoid needing an API key in browser JS.
-2. **Pyodide loads lazily**, only on first "Launch Sandbox" click — not on page load. It's several MB; loading it eagerly would defeat the "fast static site" premise.
+1. **No secrets client-side, ever.** This is why the Pyodide sandbox concept was always a synthetic-data demo, never the real LLM pipeline — an API key can't be embedded in browser JS on a public site. (As of 2026-09-17 no card actually uses the sandbox capability — see #2.)
+2. **The Pyodide sandbox (`js/sandbox-runner.js`, `capability: "sandbox"`) is currently unattached from every project**, dropped from the clinical-auditor card per user request in favor of the same static-report treatment as the notebook projects. The infrastructure is intentionally kept, not deleted — lazy-loads only on first click, costs nothing while unused, and is one `capability: "sandbox"` + a `sandbox: { runtime: "pyodide", demoCode }` object away from being reattached to a future Python project. If it's still unused after a few more phases, revisit whether to remove it instead.
 3. **All asset/script paths are relative** (`./css/...`, not `/css/...`) — the site serves from a GitHub Pages *project* subpath (`/Portafolio/`), not domain root.
 4. **GitHub API calls are cached** in `localStorage` (1hr TTL) before re-hitting the network — unauthenticated rate limit is 60 req/hr.
 5. **Private repos get no live GitHub sync** — `github-service.js` skips any project with `isPrivate: true` or no `github` URL. That's independent of whether the *deployed app* can be embedded live: `codigogt` has a private source repo (no stats, no code link) but a public live URL, so it still gets `capability: "webEmbed"` — private source and live-embeddable are separate axes, not one flag.
@@ -77,7 +77,7 @@ Other private repos exist but are intentionally excluded until the user finishes
 
 - [ ] Serve locally (`python -m http.server`), load with zero console errors
 - [ ] Category filters + search narrow the grid correctly
-- [ ] Every modal type opens: Pyodide sandbox (and actually **runs**, producing stdout), web preview (viewport switcher + fallback, including a private-source-but-public-live project), device carousel (tabs + prev/next), notebook/report details
+- [ ] Every modal type currently in use opens correctly: web preview (viewport switcher + fallback, including a private-source-but-public-live project), device carousel (tabs + prev/next), notebook/report details. If any project has `capability: "sandbox"`, also verify it actually **runs** and produces stdout — none does as of 2026-09-17, but the code path isn't deleted (see Key Constraints #2), so re-check this the moment one does.
 - [ ] Modal: `Esc` closes, focus traps inside while open, focus restores to the trigger on close
 - [ ] GitHub star/fork sync resolves without blocking first paint
 - [ ] Responsive at ~375–390px mobile width and desktop

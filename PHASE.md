@@ -25,6 +25,14 @@ Everything else got a real asset in Phase 8.
 | 6 | Accessibility & polish pass (contrast, focus order, skip link, reduced-motion) | ✅ | — |
 | 7 | Real asset swap-in (placeholder → real screenshots) | 🔄 partial | — |
 | 8 | Registry corrections + 3 new notebook projects + real assets | ✅ | — |
+| 9 | URL fixes + drop the Clinical Auditor sandbox | ✅ | — |
+
+**Phase 9** (2026-09-17):
+- `IxMaOperations` `liveUrl` → `https://www.ixmaoperations.com/` (user-supplied, corrects Phase 8's `ixmaoperations.com` without the `www`).
+- `codigogt` `liveUrl` → `https://codigogt.vercel.app/` (root, not `/directorio` — user-supplied).
+- Multi-Agent-Clinical-Auditor: dropped `capability: "sandbox"` per user request ("doesn't need the sandbox anymore, let's just use the screenshots same as mindful") — moved to `capability: "notebook"`, the same static-report treatment as the 3 Phase-8 notebook projects (single real screenshot + description + requirements, no interactivity). Removed the now-dead `sandbox: {...}` block and the `AUDITOR_DEMO_CODE` constant it referenced.
+- **Judgment call, not explicitly requested — flagging it**: the Pyodide sandbox *infrastructure* (`js/sandbox-runner.js`, `capability: "sandbox"` in the `CAPABILITY` registry, the terminal/code-editor CSS in `css/sandbox.css`) was **not** deleted, even though zero projects use it now. Reasoning: it's a real, tested technical capability (in-browser WASM Python execution) worth keeping available rather than a stale leftover — it lazy-loads and costs nothing while unattached, and reattaching it to a future Python project is a two-field change (`capability: "sandbox"` + a `sandbox: { runtime, demoCode }` object). If you'd rather it were gone entirely, say so and it comes out along with its CSS/import.
+- Verified in-browser: the auditor card now shows "📓 View Report" / "📓 Notebook + Report" (not "▶ Launch Sandbox"), and the modal opens the real dashboard screenshot with updated copy — no sandbox UI anywhere.
 
 **Phase 8** (2026-09-17):
 - Fixed `IxMaOperations` `liveUrl` (was pointing at the old `.vercel.app`
