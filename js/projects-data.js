@@ -40,49 +40,6 @@ export const CAPABILITY = {
   notebook: { icon: "📓", label: "Notebook + Report" },
 };
 
-const AUDITOR_DEMO_CODE = `# Multi-Agent-Clinical-Auditor — self-contained demo
-#
-# This is a trimmed, pure-Python distillation of the scoring logic used by
-# the real project, running here on synthetic sample records so it works
-# fully offline in this WASM sandbox. The real pipeline (crewai + litellm,
-# calling an LLM provider with a live API key) is not runnable client-side
-# — see the code viewer tab for the actual source, and the README for the
-# full architecture.
-
-records = [
-    {"id": "REC-001", "documented_dx": 3, "coded_dx": 3, "signed": True, "notes_len": 420},
-    {"id": "REC-002", "documented_dx": 4, "coded_dx": 2, "signed": True, "notes_len": 95},
-    {"id": "REC-003", "documented_dx": 2, "coded_dx": 2, "signed": False, "notes_len": 610},
-]
-
-def audit_record(rec):
-    findings = []
-    score = 100
-
-    if rec["coded_dx"] < rec["documented_dx"]:
-        gap = rec["documented_dx"] - rec["coded_dx"]
-        findings.append(f"under-coded by {gap} diagnosis(es)")
-        score -= gap * 15
-
-    if not rec["signed"]:
-        findings.append("missing provider signature")
-        score -= 20
-
-    if rec["notes_len"] < 150:
-        findings.append("clinical note unusually short — possible incomplete documentation")
-        score -= 10
-
-    score = max(score, 0)
-    status = "PASS" if score >= 80 else ("REVIEW" if score >= 50 else "FAIL")
-    return status, score, findings
-
-print(f"{'ID':<10}{'STATUS':<8}{'SCORE':<7}FINDINGS")
-for rec in records:
-    status, score, findings = audit_record(rec)
-    findings_str = "; ".join(findings) if findings else "none"
-    print(f"{rec['id']:<10}{status:<8}{score:<7}{findings_str}")
-`;
-
 export const projects = [
   {
     id: "ixmaoperations",
@@ -97,7 +54,7 @@ export const projects = [
     ],
     capability: "webEmbed",
     github: "https://github.com/emiliorl/IxMaOperations",
-    liveUrl: "https://ixmaoperations.com",
+    liveUrl: "https://www.ixmaoperations.com/",
     requirements: {
       "Runtime": "Modern web browser",
       "Network": "Required (live deployment)",
@@ -111,25 +68,20 @@ export const projects = [
     name: "Multi-Agent-Clinical-Auditor",
     tagline: "Multi-agent clinical record auditor — CrewAI + LiteLLM pipeline.",
     description:
-      "A multi-agent system (CrewAI orchestration, LiteLLM-routed LLM calls) that audits clinical records for coding gaps and documentation issues. The sandbox below runs a self-contained, pure-Python distillation of the scoring logic against synthetic sample records — the full agent pipeline requires a live LLM API key and isn't run client-side.",
+      "A multi-agent system (CrewAI orchestration, LiteLLM-routed LLM calls) that audits clinical records for coding gaps and documentation issues. Shown here as a real screenshot of the project's own dashboard (rendered with synthetic sample data) rather than a live demo — the actual pipeline calls out to an LLM provider with a live API key, which isn't something to run or expose client-side on a public site.",
     category: "python",
     languages: [
       { label: "Python", tone: "olive", icon: "python" },
       { label: "CrewAI", tone: "muted", icon: "crewai" },
       { label: "AI/Agents", tone: "muted", icon: "ai-agents" },
     ],
-    capability: "sandbox",
+    capability: "notebook",
     github: "https://github.com/emiliorl/Multi-Agent-Clinical-Auditor",
     requirements: {
-      "Runtime": "Browser with WebAssembly support",
-      "Real pipeline": "Python 3.11+, an LLM API key (not required for the sandbox demo)",
-      "Sandbox deps": "Pyodide stdlib only — no network calls",
+      "Runtime": "Python 3.11+, an LLM API key (see repo README)",
+      "Dependencies": "crewai, litellm, pandas, scikit-learn, sentence-transformers",
     },
     media: ["assets/screenshots/multi-agent-clinical-auditor-01.png"],
-    sandbox: {
-      runtime: "pyodide",
-      demoCode: AUDITOR_DEMO_CODE,
-    },
     isPrivate: false,
   },
   {
@@ -228,12 +180,12 @@ export const projects = [
     name: "codigogt",
     tagline: "Full-stack directory app — deployed live, source private.",
     description:
-      "A full-stack project demonstrating end-to-end development ability, live at codigogt.vercel.app/directorio. The source repository is still private, so it's previewed here the same way as IxMaOperations — a real live embed of the deployed app — rather than a hand-typed placeholder card; only the GitHub stats/source-viewer are unavailable, since there's no public repo to fetch them from.",
+      "A full-stack project demonstrating end-to-end development ability, live at codigogt.vercel.app. The source repository is still private, so it's previewed here the same way as IxMaOperations — a real live embed of the deployed app — rather than a hand-typed placeholder card; only the GitHub stats/source-viewer are unavailable, since there's no public repo to fetch them from.",
     category: "web",
     languages: [{ label: "Full-Stack", tone: "terracotta", icon: "fullstack" }],
     capability: "webEmbed",
     github: null,
-    liveUrl: "https://codigogt.vercel.app/directorio",
+    liveUrl: "https://codigogt.vercel.app/",
     requirements: {
       "Runtime": "Modern web browser",
       "Network": "Required (live deployment)",
