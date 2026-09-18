@@ -6,10 +6,11 @@ Legend: ✅ done · 🔄 in progress · ⬜ planned · 🚫 blocked
 
 ## Current Phase
 
-⬜ **Phase 7 — Real asset swap-in** (🚫 blocked on user)
-Waiting on real screenshots for the Primary Feature projects and any
-finished private repos the user wants added. See the placeholder-asset
-convention documented in `js/projects-data.js`.
+⬜ **Phase 7 — Real asset swap-in** (🚫 partially blocked on user)
+`ixmaoperations-01`, `codigogt-01`, and `mindful-01/-02/-03` are still
+placeholders — no real assets found for these yet (see Phase 8 notes: Mindful
+specifically was searched for and confirmed unavailable, not skipped).
+Everything else got a real asset in Phase 8.
 
 ## Phase Log
 
@@ -22,7 +23,55 @@ convention documented in `js/projects-data.js`.
 | 4 | Interactivity — render/filter/search, modal manager, web/device previews, Pyodide sandbox, GitHub live sync | ✅ | `85ac8c0` |
 | 5 | Tech-stack icon set (`assets/icons/`, wired into pills + Earlier Work) | ✅ | — |
 | 6 | Accessibility & polish pass (contrast, focus order, skip link, reduced-motion) | ✅ | — |
-| 7 | Real asset swap-in (placeholder → real screenshots) | 🚫 blocked on user | — |
+| 7 | Real asset swap-in (placeholder → real screenshots) | 🔄 partial | — |
+| 8 | Registry corrections + 3 new notebook projects + real assets | ✅ | — |
+
+**Phase 8** (2026-09-17):
+- Fixed `IxMaOperations` `liveUrl` (was pointing at the old `.vercel.app`
+  domain instead of `ixmaoperations.com`).
+- Upgraded `codigogt` from `capability: "manual"` (hand-typed placeholder
+  card) to `"webEmbed"` — it's live at `codigogt.vercel.app/directorio`.
+  Verified in-browser: the real "Directorio Político" app renders inside the
+  preview modal. Source repo is still private (confirmed via the GitHub API —
+  no public `codigogt` repo exists), so `github` stays `null` and there's
+  still no code link/stats; private-source and live-embeddable turned out to
+  be independent, not one flag (see PLAN.md Key Constraints #5).
+- Swapped in a **real** screenshot for Multi-Agent-Clinical-Auditor: found the
+  project's actual `reports/dashboard.html` in the user's local repo download,
+  fed it a small synthetic `patients.json` (schema reverse-engineered from the
+  dashboard's own `loadData()`; no real patient data, same no-secrets rule as
+  the sandbox demo) and screenshotted the real rendered UI.
+- **Mindful**: searched for real screenshots (Downloads root, the MindShield
+  source dump, `Mindshield.pdf`) — the PDF is a 4-page text-only report with
+  no UI mockups, and no file anywhere is actually named "Mindful". No real
+  asset exists yet; still a placeholder, flagged rather than faked.
+- Merged `MindShield` into `Mindful` as a single registry entry per the user's
+  correction ("only leave mindful and remove mindshield because mindful
+  builds on the previous project mindshield") — not a dual v1/v2 card, a
+  straight replacement. Deleted the now-orphaned `mindshield-0{1,2,3}.svg`.
+- Added 3 new Primary Feature projects — `Generative-Models-Trio`,
+  `Cat/Dog-CNN-Comparison`, `Hybrid-ALPR` — all under a new `capability:
+  "notebook"` type (📓, static report image, no interactivity; `app.js` now
+  has an explicit branch for it instead of falling through to the generic
+  "Details" button). All three got **real** card images, not generated
+  placeholders:
+  - CatDog CNN: the notebook's own training-curves output cell, extracted
+    directly from the `.ipynb` JSON (`cell.outputs[].data["image/png"]`).
+  - Generative Models Trio: composited from the VAE/GAN/Diffusion notebooks'
+    own final-sample output cells (one panel each) — chosen deliberately
+    over a placeholder because the real quality progression (blurry VAE →
+    crisp diffusion) *is* the point of the project.
+  - Hybrid ALPR: pulled from the user's own presentation deck
+    (`Hybrid_ALPR_Presentation/`), but the **architecture slide**, not the
+    **results slide** — the deck's results slide shows stale numbers
+    (91.3%/84.7%) that don't match the repo README's current, correct ones
+    (96.1%/80.6%, already what the drafted description cited); using the
+    results slide would have put contradicting numbers right next to each
+    other on the same card.
+  - Both composited/wide images were letterboxed to the card's 16:10 aspect
+    so the thumbnail crop doesn't cut into the outer panels.
+
+## Older Phase Notes
 
 **Phase 6 findings & fixes** (contrast computed via the WCAG relative-luminance
 formula, not eyeballed):
