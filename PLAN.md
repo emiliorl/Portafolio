@@ -52,7 +52,7 @@ assets/
 
 | Project | Category | Capability | Notes |
 |---|---|---|---|
-| IxMaOperations | Web | Live web embed | TypeScript, deployed at www.ixmaoperations.com |
+| IxMaOperations | Web | Live web embed (`embeddable: false`) | TypeScript, deployed at www.ixmaoperations.com. Site sends `X-Frame-Options: DENY` — the preview always shows a real screenshot + link out, iframe is never attempted |
 | Multi-Agent-Clinical-Auditor | Python | Notebook + Report | No longer a live sandbox (dropped per user request, 2026-09-17) — shown as a real screenshot of the project's own `reports/dashboard.html`, rendered with synthetic sample data, same static-report treatment as the notebook projects below. The real CrewAI/LiteLLM pipeline needs a live LLM API key, so it was never runnable client-side anyway |
 | Mindful | Android | Device preview | Kotlin / Jetpack Compose, Accessibility API. Supersedes an earlier project, MindShield (folded into this single entry — no separate MindShield card) |
 | Generative Models Trio | Python | Notebook + Report | VAE/DCGAN/Diffusion compared. Card media composited from the notebooks' own real output cells |
@@ -72,12 +72,13 @@ Other private repos exist but are intentionally excluded until the user finishes
 4. **GitHub API calls are cached** in `localStorage` (1hr TTL) before re-hitting the network — unauthenticated rate limit is 60 req/hr.
 5. **Private repos get no live GitHub sync** — `github-service.js` skips any project with `isPrivate: true` or no `github` URL. That's independent of whether the *deployed app* can be embedded live: `codigogt` has a private source repo (no stats, no code link) but a public live URL, so it still gets `capability: "webEmbed"` — private source and live-embeddable are separate axes, not one flag.
 6. **Placeholder screenshots follow a fixed naming convention** (`assets/screenshots/<project-id>-NN.<ext>`) so swapping in real ones is a pure file replace — see the header comment in `js/projects-data.js` for which projects currently have real assets vs. placeholders.
+7. **X-Frame-Options/CSP framing blocks cannot be detected from JS** — a blocked cross-origin iframe and a successfully-loaded one are indistinguishable (both report `contentDocument === null`, both fire `load`); confirmed empirically against `ixmaoperations.com` (which sends `X-Frame-Options: DENY`) and `codigogt.vercel.app` (which sends neither header) side by side, and they behaved identically from JS. So this is a manually-verified `embeddable: false` flag on the project (check with `curl -I <url>`), not an auto-detected heuristic. `buildWebPreview` skips the iframe attempt entirely when it's set, going straight to a real screenshot + "Open Live Site" link — no blank/broken frame. See the doc comment in `js/device-preview.js`.
 
 ## Verification Checklist (re-run this after any structural change)
 
 - [ ] Serve locally (`python -m http.server`), load with zero console errors
 - [ ] Category filters + search narrow the grid correctly
-- [ ] Every modal type currently in use opens correctly: web preview (viewport switcher + fallback, including a private-source-but-public-live project), device carousel (tabs + prev/next), notebook/report details. If any project has `capability: "sandbox"`, also verify it actually **runs** and produces stdout — none does as of 2026-09-17, but the code path isn't deleted (see Key Constraints #2), so re-check this the moment one does.
+- [ ] Every modal type currently in use opens correctly: web preview — both the iframe path (viewport switcher + best-effort timeout fallback) and the `embeddable: false` path (real screenshot + link out, no iframe attempt at all) — device carousel (tabs + prev/next), notebook/report details. If any project has `capability: "sandbox"`, also verify it actually **runs** and produces stdout — none does as of 2026-09-17, but the code path isn't deleted (see Key Constraints #2), so re-check this the moment one does.
 - [ ] Modal: `Esc` closes, focus traps inside while open, focus restores to the trigger on close
 - [ ] GitHub star/fork sync resolves without blocking first paint
 - [ ] Responsive at ~375–390px mobile width and desktop
