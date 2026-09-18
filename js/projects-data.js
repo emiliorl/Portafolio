@@ -13,8 +13,20 @@
  *   - generative-models-trio-01.png — composited from the notebooks' real output cells
  *     (VAE/DCGAN/Diffusion generated samples)
  *   - catdog-cnn-comparison-01.png  — the notebook's actual training-curves output cell
- * Still placeholders, pending real assets from the user:
- *   - ixmaoperations-01, codigogt-01, mindful-01/-02/-03
+ *   - mindful-01..06.png        — the project's own screenshots/*.png from its GitHub repo
+ *   - ixmaoperations-01.png     — real screenshot of the live site (it blocks iframe
+ *     embedding — see `embeddable` below — so this is what actually shows in the preview)
+ * Still placeholder, pending a real asset from the user:
+ *   - codigogt-01
+ *
+ * `embeddable: false` (webEmbed projects only): there is NO reliable way to
+ * detect an X-Frame-Options/CSP frame-ancestors block from inside the page —
+ * a blocked iframe and a successfully-loaded one are indistinguishable via
+ * JS (confirmed empirically, see PHASE.md). So this is a manually-verified
+ * flag, not auto-detected: check with `curl -I <url>` for `x-frame-options`
+ * or `content-security-policy: frame-ancestors`, and set it if present. When
+ * true (the default), `buildWebPreview` still attempts the iframe with a
+ * best-effort timeout fallback. See `js/device-preview.js`.
  *
  * TECH-STACK ICONS: each `languages`/earlierWork entry may carry an `icon`
  * slug matching a file under `assets/icons/<slug>.svg` (medallion-style,
@@ -55,12 +67,13 @@ export const projects = [
     capability: "webEmbed",
     github: "https://github.com/emiliorl/IxMaOperations",
     liveUrl: "https://www.ixmaoperations.com/",
+    embeddable: false, // confirmed via `curl -I`: sends X-Frame-Options: DENY + frame-ancestors 'none'
     requirements: {
       "Runtime": "Modern web browser",
-      "Network": "Required (live deployment)",
-      "Notes": "Some hosts block iframe embedding — a fallback screenshot is shown if so.",
+      "Network": "Required to open the live site (screenshot itself needs no network)",
+      "Notes": "This site sends X-Frame-Options: DENY — it can never be iframed, so the preview shows a real screenshot + a link out instead of attempting to embed it.",
     },
-    media: ["assets/screenshots/ixmaoperations-01.svg"],
+    media: ["assets/screenshots/ixmaoperations-01.png"],
     isPrivate: false,
   },
   {
@@ -104,9 +117,12 @@ export const projects = [
       "Permissions": "Accessibility API, Usage Access, Notifications, local storage",
     },
     media: [
-      "assets/screenshots/mindful-01.svg",
-      "assets/screenshots/mindful-02.svg",
-      "assets/screenshots/mindful-03.svg",
+      "assets/screenshots/mindful-01.png",
+      "assets/screenshots/mindful-02.png",
+      "assets/screenshots/mindful-03.png",
+      "assets/screenshots/mindful-04.png",
+      "assets/screenshots/mindful-05.png",
+      "assets/screenshots/mindful-06.png",
     ],
     isPrivate: false,
   },

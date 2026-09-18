@@ -6,11 +6,9 @@ Legend: ✅ done · 🔄 in progress · ⬜ planned · 🚫 blocked
 
 ## Current Phase
 
-⬜ **Phase 7 — Real asset swap-in** (🚫 partially blocked on user)
-`ixmaoperations-01`, `codigogt-01`, and `mindful-01/-02/-03` are still
-placeholders — no real assets found for these yet (see Phase 8 notes: Mindful
-specifically was searched for and confirmed unavailable, not skipped).
-Everything else got a real asset in Phase 8.
+⬜ **Phase 7 — Real asset swap-in** (🔄 nearly done, one left)
+Only `codigogt-01` is still a placeholder. Everything else — including
+Mindful and IxMaOperations, both fixed in Phase 10 — now has a real asset.
 
 ## Phase Log
 
@@ -26,6 +24,34 @@ Everything else got a real asset in Phase 8.
 | 7 | Real asset swap-in (placeholder → real screenshots) | 🔄 partial | — |
 | 8 | Registry corrections + 3 new notebook projects + real assets | ✅ | — |
 | 9 | URL fixes + drop the Clinical Auditor sandbox | ✅ | — |
+| 10 | Real Mindful screenshots + fix the IxMaOperations iframe-block bug | ✅ | — |
+
+**Phase 10** (2026-09-17) — two real bugs reported by the user, both confirmed and fixed:
+
+1. **Mindful screenshots were never actually missing** — they're in the repo
+   at `github.com/emiliorl/Mindful/tree/main/screenshots` (6 real UI
+   screenshots: home, apps, silence, stats, routines, settings). Phase 8 only
+   searched the local Downloads folder and concluded no real assets existed;
+   it should have checked the GitHub repo itself. Downloaded all 6 via
+   `raw.githubusercontent.com`, replaced the 3 placeholder SVGs with
+   `mindful-01..06.png`. Verified in-browser: carousel now shows "Screen 1 of
+   6" with the real app UI in the phone frame.
+2. **IxMaOperations' live preview showed a blank/broken iframe** — root cause:
+   the site sends `X-Frame-Options: DENY` + `frame-ancestors 'none'`
+   (confirmed via `curl -I`), so it can never be framed, anywhere. The
+   existing "best-effort" detection (wait 4s for the iframe's `load` event)
+   could not catch this — empirically verified that a blocked iframe *and* a
+   working one (tested side by side against `codigogt.vercel.app`, headers
+   confirmed clean) both fire `load` and both report
+   `contentDocument === null`; this is standard same-origin-policy opacity,
+   not a bug, and there's no way to tell them apart from JS. Fix:
+   `js/device-preview.js` now takes an `embeddable: false` flag that skips
+   the iframe attempt entirely for a known-blocked site, showing a real
+   screenshot + "Open Live Site" link immediately instead of a stalled
+   frame. Also screenshotted the actual live site (`www.ixmaoperations.com`)
+   for `ixmaoperations-01.png`, replacing the old placeholder SVG — the
+   fallback is only useful if what it shows is real. `codigogt` needed no
+   change; its headers confirmed it's genuinely embeddable.
 
 **Phase 9** (2026-09-17):
 - `IxMaOperations` `liveUrl` → `https://www.ixmaoperations.com/` (user-supplied, corrects Phase 8's `ixmaoperations.com` without the `www`).

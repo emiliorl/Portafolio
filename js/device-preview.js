@@ -9,9 +9,40 @@ const VIEWPORTS = [
   { id: "mobile", label: "Mobile" },
 ];
 
-/** @param {{liveUrl: string, media: string[]}} project */
+/**
+ * There is no reliable way to detect an X-Frame-Options/CSP frame-ancestors
+ * block from inside the page: a blocked cross-origin iframe and a
+ * successfully-loaded one both report `contentDocument === null` and both
+ * fire `load` — same-origin policy makes them deliberately indistinguishable
+ * (confirmed empirically, see PHASE.md). So this is NOT auto-detected. Set
+ * `embeddable: false` on a project once you've confirmed (e.g. `curl -I` for
+ * `x-frame-options`/`content-security-policy: frame-ancestors`) that a site
+ * blocks framing, and the iframe attempt is skipped entirely in favor of a
+ * real screenshot + link out — no broken/blank frame, no guessing.
+ *
+ * @param {{liveUrl: string, media: string[], name: string, embeddable?: boolean}} project
+ */
 export function buildWebPreview(project) {
   const wrap = document.createElement("div");
+
+  if (project.embeddable === false) {
+    const note = document.createElement("div");
+    note.className = "viewport-fallback";
+    note.innerHTML = `
+      <img src="${project.media[0]}" alt="${project.name} screenshot" style="border-radius: var(--radius-md); margin-bottom: var(--space-4); max-width: 100%;" />
+      <p>This site sends <code>X-Frame-Options: DENY</code>, so it can't be embedded in an iframe anywhere, by design — not a bug in this preview. Showing a real screenshot instead.</p>
+    `;
+    const openBtn = document.createElement("a");
+    openBtn.className = "btn btn--primary btn--sm";
+    openBtn.href = project.liveUrl;
+    openBtn.target = "_blank";
+    openBtn.rel = "noopener";
+    openBtn.textContent = "Open Live Site ↗";
+    openBtn.style.marginTop = "var(--space-4)";
+    note.appendChild(openBtn);
+    wrap.appendChild(note);
+    return wrap;
+  }
 
   const toolbar = document.createElement("div");
   toolbar.className = "sandbox-toolbar";
@@ -53,14 +84,16 @@ export function buildWebPreview(project) {
   fallback.hidden = true;
   fallback.innerHTML = `
     <img src="${project.media[0]}" alt="${project.name} screenshot" style="border-radius: var(--radius-md); margin-bottom: var(--space-4);" />
-    <p>This site restricts iframe embedding — showing a screenshot instead.</p>
+    <p>This site may restrict iframe embedding — showing a screenshot instead.</p>
   `;
 
   frame.append(iframe, fallback);
 
-  // Best-effort block detection: most hosts that set X-Frame-Options/CSP
-  // frame-ancestors never fire the iframe's `load` event with content, so a
-  // stalled load after a few seconds is treated as "probably blocked."
+  // Best-effort only, for projects with unknown/unverified framing policy
+  // (see the doc comment above): if the iframe hasn't fired `load` within a
+  // few seconds, assume something's wrong and show the fallback. This does
+  // NOT catch a confirmed X-Frame-Options: DENY — that's handled above via
+  // the `embeddable` flag instead, since `load` fires either way.
   let loaded = false;
   iframe.addEventListener("load", () => {
     loaded = true;
