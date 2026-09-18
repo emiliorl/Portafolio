@@ -52,11 +52,13 @@ assets/
 
 | Project | Category | Capability | Notes |
 |---|---|---|---|
-| IxMaOperations | Web | Live web embed | TypeScript, deployed at ixmaoperations.vercel.app |
-| Multi-Agent-Clinical-Auditor | Python | Pyodide sandbox | Runs a self-contained synthetic-data demo, **not** the real CrewAI/LiteLLM pipeline (that needs a live API key — never embedded client-side) |
-| Mindful | Android | Device preview | Kotlin / Jetpack Compose |
-| MindShield | Android | Device preview | Kotlin, Accessibility API |
-| codigogt | Web (Full-Stack) | Manual entry | **Private repo** — no live GitHub sync, source, or sandbox is possible; hand-authored description + placeholder screenshots |
+| IxMaOperations | Web | Live web embed | TypeScript, deployed at ixmaoperations.com |
+| Multi-Agent-Clinical-Auditor | Python | Pyodide sandbox | Runs a self-contained synthetic-data demo, **not** the real CrewAI/LiteLLM pipeline (that needs a live API key — never embedded client-side). Card media is a real screenshot of the project's own `reports/dashboard.html`, rendered with synthetic sample data |
+| Mindful | Android | Device preview | Kotlin / Jetpack Compose, Accessibility API. Supersedes an earlier project, MindShield (folded into this single entry — no separate MindShield card) |
+| Generative Models Trio | Python | Notebook + Report | VAE/DCGAN/Diffusion compared. Card media composited from the notebooks' own real output cells |
+| Cat/Dog CNN Comparison | Python | Notebook + Report | Card media is the notebook's actual training-curves output cell |
+| Hybrid ALPR | Python | Notebook + Report | No hosted demo yet — "lighter" static-report treatment, same as the two notebook repos above. Card media is a real slide from the project's own report |
+| codigogt | Web (Full-Stack) | Live web embed | Deployed at codigogt.vercel.app/directorio; **source repo is still private** (no GitHub stats/code link), but the live app embeds the same way as IxMaOperations |
 
 **Earlier Work strip** (link-only, no sandbox) — 2021 student projects: `Pro-Ctrl-Back-End`, `Pro-Ctrl-Front-End`, `DBSTermProject`, `GestorDeHoteles`, `torneoDeportes-Back-End`, `VentaOnline`, `Calculator`. (Corrected against the live GitHub API — several were mislabeled "Java" in early planning; they're JavaScript/HTML.)
 
@@ -68,14 +70,14 @@ Other private repos exist but are intentionally excluded until the user finishes
 2. **Pyodide loads lazily**, only on first "Launch Sandbox" click — not on page load. It's several MB; loading it eagerly would defeat the "fast static site" premise.
 3. **All asset/script paths are relative** (`./css/...`, not `/css/...`) — the site serves from a GitHub Pages *project* subpath (`/Portafolio/`), not domain root.
 4. **GitHub API calls are cached** in `localStorage` (1hr TTL) before re-hitting the network — unauthenticated rate limit is 60 req/hr.
-5. **Private repos get no live sync** — `github-service.js` skips any project with `isPrivate: true` or no `github` URL.
-6. **Placeholder screenshots follow a fixed naming convention** (`assets/screenshots/<project-id>-NN.svg`) so swapping in real ones is a pure file replace — see the header comment in `js/projects-data.js`.
+5. **Private repos get no live GitHub sync** — `github-service.js` skips any project with `isPrivate: true` or no `github` URL. That's independent of whether the *deployed app* can be embedded live: `codigogt` has a private source repo (no stats, no code link) but a public live URL, so it still gets `capability: "webEmbed"` — private source and live-embeddable are separate axes, not one flag.
+6. **Placeholder screenshots follow a fixed naming convention** (`assets/screenshots/<project-id>-NN.<ext>`) so swapping in real ones is a pure file replace — see the header comment in `js/projects-data.js` for which projects currently have real assets vs. placeholders.
 
 ## Verification Checklist (re-run this after any structural change)
 
 - [ ] Serve locally (`python -m http.server`), load with zero console errors
 - [ ] Category filters + search narrow the grid correctly
-- [ ] Every modal type opens: Pyodide sandbox (and actually **runs**, producing stdout), web preview (viewport switcher + fallback), device carousel (tabs + prev/next), manual details (private repo)
+- [ ] Every modal type opens: Pyodide sandbox (and actually **runs**, producing stdout), web preview (viewport switcher + fallback, including a private-source-but-public-live project), device carousel (tabs + prev/next), notebook/report details
 - [ ] Modal: `Esc` closes, focus traps inside while open, focus restores to the trigger on close
 - [ ] GitHub star/fork sync resolves without blocking first paint
 - [ ] Responsive at ~375–390px mobile width and desktop

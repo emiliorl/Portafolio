@@ -2,16 +2,19 @@
  * projects-data.js — project registry
  *
  * PLACEHOLDER ASSET CONVENTION (confirmed with user, 2026-09-02):
- * Every `media` path below points to a generated placeholder SVG under
- * `assets/screenshots/`, named `<project-id>-NN.svg`. Swapping in a real
- * screenshot later is a pure file replace — keep the same filename (or
- * update the path here) and no other code changes are needed.
- * Expected real-asset filenames per project:
- *   - ixmaoperations-01(.png|.jpg)      — desktop screenshot of the live site
- *   - multi-agent-clinical-auditor-01   — dashboard / report screenshot
- *   - codigogt-01                       — hero screenshot (private repo, user-supplied)
- *   - mindful-01 / -02 / -03            — phone screens
- *   - mindshield-01 / -02 / -03         — phone screens
+ * Every `media` path points to `assets/screenshots/<project-id>-NN.<ext>`.
+ * Swapping in a real asset is a pure file replace — keep the same filename
+ * (or update the path here) and no other code changes are needed.
+ * As of 2026-09-17, real assets are in for:
+ *   - multi-agent-clinical-auditor-01.png — the project's actual reports/dashboard.html,
+ *     rendered with synthetic sample data (no real patient data; API keys are never
+ *     involved — see Review Notes #2)
+ *   - hybrid-alpr-01.png        — the CRNN architecture slide from the project's own report
+ *   - generative-models-trio-01.png — composited from the notebooks' real output cells
+ *     (VAE/DCGAN/Diffusion generated samples)
+ *   - catdog-cnn-comparison-01.png  — the notebook's actual training-curves output cell
+ * Still placeholders, pending real assets from the user:
+ *   - ixmaoperations-01, codigogt-01, mindful-01/-02/-03
  *
  * TECH-STACK ICONS: each `languages`/earlierWork entry may carry an `icon`
  * slug matching a file under `assets/icons/<slug>.svg` (medallion-style,
@@ -34,6 +37,7 @@ export const CAPABILITY = {
   webEmbed: { icon: "🌐", label: "Live Web Embed" },
   devicePreview: { icon: "📱", label: "Mobile Device Preview" },
   manual: { icon: "◆", label: "Private Repo — Details Only" },
+  notebook: { icon: "📓", label: "Notebook + Report" },
 };
 
 const AUDITOR_DEMO_CODE = `# Multi-Agent-Clinical-Auditor — self-contained demo
@@ -93,7 +97,7 @@ export const projects = [
     ],
     capability: "webEmbed",
     github: "https://github.com/emiliorl/IxMaOperations",
-    liveUrl: "https://ixmaoperations.vercel.app",
+    liveUrl: "https://ixmaoperations.com",
     requirements: {
       "Runtime": "Modern web browser",
       "Network": "Required (live deployment)",
@@ -121,7 +125,7 @@ export const projects = [
       "Real pipeline": "Python 3.11+, an LLM API key (not required for the sandbox demo)",
       "Sandbox deps": "Pyodide stdlib only — no network calls",
     },
-    media: ["assets/screenshots/multi-agent-clinical-auditor-01.svg"],
+    media: ["assets/screenshots/multi-agent-clinical-auditor-01.png"],
     sandbox: {
       runtime: "pyodide",
       demoCode: AUDITOR_DEMO_CODE,
@@ -131,20 +135,21 @@ export const projects = [
   {
     id: "mindful",
     name: "Mindful",
-    tagline: "Mental health & wellbeing companion app — Kotlin, Jetpack Compose.",
+    tagline: "Digital wellness companion — Kotlin, Jetpack Compose, Android Accessibility API.",
     description:
-      "An Android app supporting mental health and wellbeing routines, built with Kotlin and modern Jetpack Compose UI.",
+      "An Android app for mental health and wellbeing, using the Accessibility API to detect compulsive engagement patterns and gently interrupt them, then redirect attention toward real recovery instead of a hard app block. Builds on an earlier project, MindShield, carrying its Accessibility-based usage-guard approach forward into a rebuilt, Jetpack Compose UI.",
     category: "android",
     languages: [
       { label: "Kotlin", tone: "olive", icon: "kotlin" },
       { label: "Jetpack Compose", tone: "muted", icon: "jetpack-compose" },
+      { label: "Android", tone: "muted", icon: "android" },
     ],
     capability: "devicePreview",
     github: "https://github.com/emiliorl/Mindful",
     requirements: {
       "OS": "Android 12+",
       "Memory": "4GB+ device recommended",
-      "Permissions": "Notifications (reminders), local storage",
+      "Permissions": "Accessibility API, Usage Access, Notifications, local storage",
     },
     media: [
       "assets/screenshots/mindful-01.svg",
@@ -154,42 +159,85 @@ export const projects = [
     isPrivate: false,
   },
   {
-    id: "mindshield",
-    name: "MindShield",
-    tagline: "Digital wellness & screen-time guard — Kotlin, Android Accessibility API.",
+    id: "generative-models-trio",
+    name: "Generative Models Trio",
+    tagline: "VAE + DCGAN + Diffusion (DDPM), implemented from scratch and compared.",
     description:
-      "A digital wellness app that helps curb compulsive engagement patterns, using Android's Accessibility API to detect and gently interrupt problem usage.",
-    category: "android",
+      "Three generative modeling paradigms implemented from scratch in PyTorch and compared side by side: a β-VAE (CIFAR-10, exploring latent dimensionality and KL weighting), a spectrally-normalized DCGAN (64×64 cat faces), and a denoising diffusion model (DDPM, via a UNet2DModel from 🤗 diffusers, also on cat faces). Each notebook includes training curves and generated samples.",
+    category: "python",
     languages: [
-      { label: "Kotlin", tone: "olive", icon: "kotlin" },
-      { label: "Android", tone: "muted", icon: "android" },
+      { label: "Python", tone: "olive", icon: "python" },
+      { label: "PyTorch", tone: "muted" },
+      { label: "Generative AI", tone: "muted" },
     ],
-    capability: "devicePreview",
-    github: "https://github.com/emiliorl/MindShield",
+    capability: "notebook",
+    github: "https://github.com/emiliorl/Generative-Models-Trio",
     requirements: {
-      "OS": "Android 12+",
-      "Memory": "4GB+ device recommended",
-      "Permissions": "Accessibility API, Usage Access",
+      "Runtime": "Python 3.x, PyTorch, 🤗 diffusers/datasets (see notebooks for full environment)",
+      "Datasets": "CIFAR-10 (auto-downloaded) and huggan/AFHQ (auto-downloaded) — nothing bundled",
+      "Notes": "Notebooks were developed and trained on Google Colab (GPU).",
     },
-    media: [
-      "assets/screenshots/mindshield-01.svg",
-      "assets/screenshots/mindshield-02.svg",
-      "assets/screenshots/mindshield-03.svg",
+    media: ["assets/screenshots/generative-models-trio-01.png"],
+    isPrivate: false,
+  },
+  {
+    id: "catdog-cnn-comparison",
+    name: "Cat/Dog CNN Comparison",
+    tagline: "Basic vs. BatchNorm+Dropout CNN for cat/dog classification — 75.98% vs 84.13%.",
+    description:
+      "A controlled comparison of two CNN architectures for binary cat/dog classification, isolating the effect of BatchNorm + Dropout on generalization. Both models share the same data split, augmentation, optimizer, and early-stopping criteria — only the architecture differs. The enhanced model closes the train/val gap and beats the basic CNN by over 8 points of test accuracy.",
+    category: "python",
+    languages: [
+      { label: "Python", tone: "olive", icon: "python" },
+      { label: "PyTorch", tone: "muted" },
+      { label: "Computer Vision", tone: "muted" },
     ],
+    capability: "notebook",
+    github: "https://github.com/emiliorl/CatDog-CNN-Comparison",
+    requirements: {
+      "Runtime": "Python 3.x, PyTorch (see notebook for full environment)",
+      "Dataset": "Kaggle tongpython/cat-and-dog, downloaded at runtime via kagglehub",
+    },
+    media: ["assets/screenshots/catdog-cnn-comparison-01.png"],
+    isPrivate: false,
+  },
+  {
+    id: "hybrid-alpr",
+    name: "Hybrid ALPR",
+    tagline: "License plate recognition — homography rectification + CRNN, 96.1% CRR on CCPD.",
+    description:
+      "An end-to-end Automatic License Plate Recognition pipeline combining classical image processing (homography-based geometric rectification, CLAHE + morphological Top-Hat enhancement) with a lightweight deep sequence model (MobileNetV2 + Bidirectional GRU, trained with CTC loss). Evaluated on the CCPD 2019 dataset, reaching 96.1% character recognition rate and 80.6% full-sequence accuracy.",
+    category: "python",
+    languages: [
+      { label: "Python", tone: "olive", icon: "python" },
+      { label: "PyTorch", tone: "muted" },
+      { label: "Computer Vision", tone: "muted" },
+    ],
+    capability: "notebook",
+    github: "https://github.com/emiliorl/Hybrid-ALPR",
+    requirements: {
+      "Runtime": "Python 3.x, PyTorch, OpenCV (see notebook for full environment)",
+      "Dataset": "CCPD 2019 (not bundled — see repo README for access)",
+      "Notes": "Notebook was developed and trained on Google Colab (GPU).",
+    },
+    media: ["assets/screenshots/hybrid-alpr-01.png"],
     isPrivate: false,
   },
   {
     id: "codigogt",
     name: "codigogt",
-    tagline: "Full-stack project — private repository.",
+    tagline: "Full-stack directory app — deployed live, source private.",
     description:
-      "A full-stack project demonstrating end-to-end development ability. This repository is private, so its source, live stats, and sandbox aren't fetchable from this static site — details here are entered by hand and screenshots are placeholders until the user supplies real ones.",
+      "A full-stack project demonstrating end-to-end development ability, live at codigogt.vercel.app/directorio. The source repository is still private, so it's previewed here the same way as IxMaOperations — a real live embed of the deployed app — rather than a hand-typed placeholder card; only the GitHub stats/source-viewer are unavailable, since there's no public repo to fetch them from.",
     category: "web",
     languages: [{ label: "Full-Stack", tone: "terracotta", icon: "fullstack" }],
-    capability: "manual",
+    capability: "webEmbed",
     github: null,
+    liveUrl: "https://codigogt.vercel.app/directorio",
     requirements: {
-      "Access": "Private repository — code not publicly viewable",
+      "Runtime": "Modern web browser",
+      "Network": "Required (live deployment)",
+      "Access": "Source repository is private — deployed app is public",
     },
     media: ["assets/screenshots/codigogt-01.svg"],
     isPrivate: true,

@@ -115,6 +115,15 @@ function launchAction(project) {
         bodyEl: buildAndroidModalBody(project),
       });
     });
+  } else if (project.capability === "notebook") {
+    btn.className = "btn btn--ghost btn--sm";
+    setBtnLabel(btn, "📓", "View Report");
+    btn.addEventListener("click", () => {
+      openModal({
+        title: `${project.name} — Report`,
+        bodyEl: buildManualDetailsBody(project),
+      });
+    });
   } else {
     btn.className = "btn btn--ghost btn--sm";
     setBtnLabel(btn, "◆", "Details");
@@ -152,7 +161,7 @@ function buildManualDetailsBody(project) {
   const wrap = document.createElement("div");
   const img = document.createElement("img");
   img.src = project.media[0];
-  img.alt = `${project.name} placeholder screenshot`;
+  img.alt = `${project.name} screenshot`;
   img.style.borderRadius = "var(--radius-md)";
   img.style.marginBottom = "var(--space-4)";
   const p = document.createElement("p");
