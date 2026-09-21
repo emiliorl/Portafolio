@@ -21,7 +21,7 @@ export const STRINGS = {
     switchToDark: "Switch to dark theme",
     langToggleLabel: "Switch to Spanish",
     eyebrow: "Full-Stack Developer",
-    heroTitle: "Projects, in the open — run them, don't just read about them.",
+    heroTitle: "Real projects, real code — see how they actually work.",
     heroLede:
       "A working showcase of Python, web, and Android projects. Launch a real " +
       "in-browser Python sandbox, preview live web apps at any viewport, or " +
@@ -98,7 +98,7 @@ export const STRINGS = {
     switchToDark: "Cambiar a tema oscuro",
     langToggleLabel: "Cambiar a inglés",
     eyebrow: "Desarrollador Full-Stack",
-    heroTitle: "Proyectos, a la vista — ejecútalos, no solo leas sobre ellos.",
+    heroTitle: "Proyectos reales, código real — descubre cómo funcionan de verdad.",
     heroLede:
       "Una muestra funcional de proyectos en Python, web y Android. Ejecuta un " +
       "sandbox real de Python en el navegador, previsualiza apps web en vivo en " +
