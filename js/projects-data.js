@@ -45,12 +45,27 @@ export const CATEGORIES = {
 };
 
 export const CAPABILITY = {
-  sandbox: { icon: "🟢", label: "Live Sandbox (WASM)" },
-  webEmbed: { icon: "🌐", label: "Live Web Embed" },
-  devicePreview: { icon: "📱", label: "Mobile Device Preview" },
-  manual: { icon: "◆", label: "Private Repo — Details Only" },
-  notebook: { icon: "📓", label: "Notebook + Report" },
+  sandbox: { icon: "🟢", label: { en: "Live Sandbox (WASM)", es: "Sandbox en Vivo (WASM)" } },
+  webEmbed: { icon: "🌐", label: { en: "Live Web Embed", es: "Vista Web en Vivo" } },
+  devicePreview: { icon: "📱", label: { en: "Mobile Device Preview", es: "Vista Previa Móvil" } },
+  manual: { icon: "◆", label: { en: "Private Repo — Details Only", es: "Repo Privado — Solo Detalles" } },
+  notebook: { icon: "📓", label: { en: "Notebook + Report", es: "Notebook + Informe" } },
 };
+
+/**
+ * Every project may carry an `i18n.es` block overriding `tagline`,
+ * `description`, and/or `requirements` (same shape as the English fields —
+ * only overridden keys need to be present). `localizeProject` returns a
+ * shallow-merged view for the given language; `en` (or a project with no
+ * `i18n.es`) returns the project unchanged.
+ * @param {object} project
+ * @param {string} lang
+ */
+export function localizeProject(project, lang) {
+  const override = lang !== "en" && project.i18n?.[lang];
+  if (!override) return project;
+  return { ...project, ...override };
+}
 
 export const projects = [
   {
@@ -73,6 +88,19 @@ export const projects = [
       "Network": "Required to open the live site (screenshot itself needs no network)",
       "Notes": "This site sends X-Frame-Options: DENY — it can never be iframed, so the preview shows a real screenshot + a link out instead of attempting to embed it.",
     },
+    i18n: {
+      es: {
+        tagline: "Plataforma web de operaciones empresariales — TypeScript, desplegada en vivo.",
+        description:
+          "Una aplicación web full-stack de operaciones para una empresa real, construida con un stack moderno de TypeScript y desplegada en Vercel.",
+        requirements: {
+          "Entorno de ejecución": "Navegador web moderno",
+          "Red": "Se requiere para abrir el sitio en vivo (la captura de pantalla en sí no necesita red)",
+          "Notas":
+            "Este sitio envía X-Frame-Options: DENY — nunca puede incrustarse en un iframe, así que la vista previa muestra una captura de pantalla real y un enlace externo en lugar de intentar incrustarlo.",
+        },
+      },
+    },
     media: ["assets/screenshots/ixmaoperations-01.png"],
     isPrivate: false,
   },
@@ -93,6 +121,17 @@ export const projects = [
     requirements: {
       "Runtime": "Python 3.11+, an LLM API key (see repo README)",
       "Dependencies": "crewai, litellm, pandas, scikit-learn, sentence-transformers",
+    },
+    i18n: {
+      es: {
+        tagline: "Auditor multiagente de historiales clínicos — pipeline CrewAI + LiteLLM.",
+        description:
+          "Un sistema multiagente (orquestación con CrewAI, llamadas a LLM enrutadas con LiteLLM) que audita historiales clínicos en busca de vacíos de codificación y problemas de documentación. Se muestra aquí como una captura de pantalla real del propio panel del proyecto (renderizado con datos de ejemplo sintéticos) en lugar de una demo en vivo — el pipeline real llama a un proveedor de LLM con una clave de API activa, algo que no conviene ejecutar ni exponer del lado del cliente en un sitio público.",
+        requirements: {
+          "Entorno de ejecución": "Python 3.11+, una clave de API de LLM (ver README del repo)",
+          "Dependencias": "crewai, litellm, pandas, scikit-learn, sentence-transformers",
+        },
+      },
     },
     media: ["assets/screenshots/multi-agent-clinical-auditor-01.png"],
     isPrivate: false,
@@ -115,6 +154,18 @@ export const projects = [
       "OS": "Android 12+",
       "Memory": "4GB+ device recommended",
       "Permissions": "Accessibility API, Usage Access, Notifications, local storage",
+    },
+    i18n: {
+      es: {
+        tagline: "Compañero de bienestar digital — Kotlin, Jetpack Compose, API de Accesibilidad de Android.",
+        description:
+          "Una app de Android para la salud mental y el bienestar, que usa la API de Accesibilidad para detectar patrones de uso compulsivo e interrumpirlos con suavidad, redirigiendo la atención hacia una recuperación real en lugar de un bloqueo total de la app. Se construye sobre un proyecto anterior, MindShield, llevando su enfoque de guardia de uso basado en Accesibilidad hacia una interfaz reconstruida con Jetpack Compose.",
+        requirements: {
+          "SO": "Android 12+",
+          "Memoria": "Se recomienda un dispositivo con 4GB+ de RAM",
+          "Permisos": "API de Accesibilidad, Acceso al uso, Notificaciones, almacenamiento local",
+        },
+      },
     },
     media: [
       "assets/screenshots/mindful-01.png",
@@ -145,6 +196,18 @@ export const projects = [
       "Datasets": "CIFAR-10 (auto-downloaded) and huggan/AFHQ (auto-downloaded) — nothing bundled",
       "Notes": "Notebooks were developed and trained on Google Colab (GPU).",
     },
+    i18n: {
+      es: {
+        tagline: "VAE + DCGAN + Difusión (DDPM), implementados desde cero y comparados.",
+        description:
+          "Tres paradigmas de modelado generativo implementados desde cero en PyTorch y comparados lado a lado: un β-VAE (CIFAR-10, explorando la dimensionalidad latente y la ponderación KL), un DCGAN con normalización espectral (rostros de gatos de 64×64), y un modelo de difusión con eliminación de ruido (DDPM, mediante un UNet2DModel de 🤗 diffusers, también sobre rostros de gatos). Cada notebook incluye curvas de entrenamiento y muestras generadas.",
+        requirements: {
+          "Entorno de ejecución": "Python 3.x, PyTorch, 🤗 diffusers/datasets (ver notebooks para el entorno completo)",
+          "Datasets": "CIFAR-10 (descarga automática) y huggan/AFHQ (descarga automática) — nada incluido",
+          "Notas": "Los notebooks fueron desarrollados y entrenados en Google Colab (GPU).",
+        },
+      },
+    },
     media: ["assets/screenshots/generative-models-trio-01.png"],
     isPrivate: false,
   },
@@ -165,6 +228,17 @@ export const projects = [
     requirements: {
       "Runtime": "Python 3.x, PyTorch (see notebook for full environment)",
       "Dataset": "Kaggle tongpython/cat-and-dog, downloaded at runtime via kagglehub",
+    },
+    i18n: {
+      es: {
+        tagline: "CNN básica vs. BatchNorm+Dropout para clasificación de gatos/perros — 75.98% vs 84.13%.",
+        description:
+          "Una comparación controlada de dos arquitecturas CNN para clasificación binaria de gatos/perros, aislando el efecto de BatchNorm + Dropout sobre la generalización. Ambos modelos comparten la misma partición de datos, aumentación, optimizador y criterio de parada temprana — solo difiere la arquitectura. El modelo mejorado reduce la brecha entre entrenamiento y validación y supera a la CNN básica por más de 8 puntos de precisión en prueba.",
+        requirements: {
+          "Entorno de ejecución": "Python 3.x, PyTorch (ver notebook para el entorno completo)",
+          "Dataset": "Kaggle tongpython/cat-and-dog, descargado en tiempo de ejecución vía kagglehub",
+        },
+      },
     },
     media: ["assets/screenshots/catdog-cnn-comparison-01.png"],
     isPrivate: false,
@@ -188,6 +262,18 @@ export const projects = [
       "Dataset": "CCPD 2019 (not bundled — see repo README for access)",
       "Notes": "Notebook was developed and trained on Google Colab (GPU).",
     },
+    i18n: {
+      es: {
+        tagline: "Reconocimiento de placas vehiculares — rectificación por homografía + CRNN, 96.1% CRR en CCPD.",
+        description:
+          "Un pipeline de Reconocimiento Automático de Placas Vehiculares de extremo a extremo que combina procesamiento clásico de imágenes (rectificación geométrica por homografía, realce CLAHE + Top-Hat morfológico) con un modelo de secuencia profundo y liviano (MobileNetV2 + GRU bidireccional, entrenado con pérdida CTC). Evaluado en el dataset CCPD 2019, alcanzando 96.1% de tasa de reconocimiento de caracteres y 80.6% de precisión de secuencia completa.",
+        requirements: {
+          "Entorno de ejecución": "Python 3.x, PyTorch, OpenCV (ver notebook para el entorno completo)",
+          "Dataset": "CCPD 2019 (no incluido — ver README del repo para acceso)",
+          "Notas": "El notebook fue desarrollado y entrenado en Google Colab (GPU).",
+        },
+      },
+    },
     media: ["assets/screenshots/hybrid-alpr-01.png"],
     isPrivate: false,
   },
@@ -206,6 +292,18 @@ export const projects = [
       "Runtime": "Modern web browser",
       "Network": "Required (live deployment)",
       "Access": "Source repository is private — deployed app is public",
+    },
+    i18n: {
+      es: {
+        tagline: "Aplicación de directorio full-stack — desplegada en vivo, código fuente privado.",
+        description:
+          "Un proyecto full-stack que demuestra capacidad de desarrollo de extremo a extremo, en vivo en codigogt.vercel.app. El repositorio fuente todavía es privado, así que se previsualiza aquí de la misma forma que IxMaOperations — una incrustación en vivo real de la app desplegada — en lugar de una tarjeta de marcador de posición escrita a mano; solo las estadísticas de GitHub y el visor de código no están disponibles, ya que no hay un repo público del cual obtenerlas.",
+        requirements: {
+          "Entorno de ejecución": "Navegador web moderno",
+          "Red": "Requerida (despliegue en vivo)",
+          "Acceso": "El repositorio fuente es privado — la app desplegada es pública",
+        },
+      },
     },
     media: ["assets/screenshots/codigogt-01.svg"],
     isPrivate: true,

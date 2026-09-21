@@ -3,10 +3,12 @@
  * and the mobile device-frame screenshot carousel.
  */
 
+import { t } from "./i18n.js";
+
 const VIEWPORTS = [
-  { id: "desktop", label: "Desktop" },
-  { id: "tablet", label: "Tablet" },
-  { id: "mobile", label: "Mobile" },
+  { id: "desktop", key: "viewportDesktop" },
+  { id: "tablet", key: "viewportTablet" },
+  { id: "mobile", key: "viewportMobile" },
 ];
 
 /**
@@ -29,15 +31,15 @@ export function buildWebPreview(project) {
     const note = document.createElement("div");
     note.className = "viewport-fallback";
     note.innerHTML = `
-      <img src="${project.media[0]}" alt="${project.name} screenshot" style="border-radius: var(--radius-md); margin-bottom: var(--space-4); max-width: 100%;" />
-      <p>This site sends <code>X-Frame-Options: DENY</code>, so it can't be embedded in an iframe anywhere, by design — not a bug in this preview. Showing a real screenshot instead.</p>
+      <img src="${project.media[0]}" alt="${project.name} ${t("projectScreenshotAlt")}" style="border-radius: var(--radius-md); margin-bottom: var(--space-4); max-width: 100%;" />
+      <p>${t("iframeBlockedNote")}</p>
     `;
     const openBtn = document.createElement("a");
     openBtn.className = "btn btn--primary btn--sm";
     openBtn.href = project.liveUrl;
     openBtn.target = "_blank";
     openBtn.rel = "noopener";
-    openBtn.textContent = "Open Live Site ↗";
+    openBtn.textContent = t("openLiveSite");
     openBtn.style.marginTop = "var(--space-4)";
     note.appendChild(openBtn);
     wrap.appendChild(note);
@@ -50,7 +52,7 @@ export function buildWebPreview(project) {
   const switcher = document.createElement("div");
   switcher.className = "viewport-switcher";
   switcher.setAttribute("role", "group");
-  switcher.setAttribute("aria-label", "Viewport size");
+  switcher.setAttribute("aria-label", t("viewportLabel"));
 
   const actions = document.createElement("div");
   actions.style.display = "flex";
@@ -58,13 +60,13 @@ export function buildWebPreview(project) {
   const refreshBtn = document.createElement("button");
   refreshBtn.className = "btn btn--ghost btn--sm";
   refreshBtn.type = "button";
-  refreshBtn.textContent = "Refresh";
+  refreshBtn.textContent = t("refresh");
   const openBtn = document.createElement("a");
   openBtn.className = "btn btn--primary btn--sm";
   openBtn.href = project.liveUrl;
   openBtn.target = "_blank";
   openBtn.rel = "noopener";
-  openBtn.textContent = "Open Live URL ↗";
+  openBtn.textContent = t("openLiveUrl");
   actions.append(refreshBtn, openBtn);
 
   toolbar.append(switcher, actions);
@@ -75,7 +77,7 @@ export function buildWebPreview(project) {
 
   const iframe = document.createElement("iframe");
   iframe.src = project.liveUrl;
-  iframe.title = `Live preview of ${project.name}`;
+  iframe.title = `${t("livePreviewOf")} ${project.name}`;
   iframe.loading = "lazy";
   iframe.referrerPolicy = "no-referrer";
 
@@ -83,8 +85,8 @@ export function buildWebPreview(project) {
   fallback.className = "viewport-fallback";
   fallback.hidden = true;
   fallback.innerHTML = `
-    <img src="${project.media[0]}" alt="${project.name} screenshot" style="border-radius: var(--radius-md); margin-bottom: var(--space-4);" />
-    <p>This site may restrict iframe embedding — showing a screenshot instead.</p>
+    <img src="${project.media[0]}" alt="${project.name} ${t("projectScreenshotAlt")}" style="border-radius: var(--radius-md); margin-bottom: var(--space-4);" />
+    <p>${t("iframeFallbackNote")}</p>
   `;
 
   frame.append(iframe, fallback);
@@ -121,7 +123,7 @@ export function buildWebPreview(project) {
   VIEWPORTS.forEach((vp, i) => {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.textContent = vp.label;
+    btn.textContent = t(vp.key);
     btn.setAttribute("aria-pressed", i === 0 ? "true" : "false");
     btn.addEventListener("click", () => {
       frame.dataset.size = vp.id;
@@ -158,7 +160,7 @@ export function buildDeviceCarousel(project) {
   controls.className = "carousel__controls";
   const prevBtn = document.createElement("button");
   prevBtn.type = "button";
-  prevBtn.setAttribute("aria-label", "Previous screen");
+  prevBtn.setAttribute("aria-label", t("prevScreen"));
   prevBtn.textContent = "‹";
   const dots = document.createElement("span");
   dots.style.fontFamily = "var(--font-mono)";
@@ -166,14 +168,14 @@ export function buildDeviceCarousel(project) {
   dots.style.color = "var(--ink-2)";
   const nextBtn = document.createElement("button");
   nextBtn.type = "button";
-  nextBtn.setAttribute("aria-label", "Next screen");
+  nextBtn.setAttribute("aria-label", t("nextScreen"));
   nextBtn.textContent = "›";
   controls.append(prevBtn, dots, nextBtn);
 
   function render() {
     img.src = project.media[index];
-    img.alt = `${project.name} — screen ${index + 1} of ${project.media.length}`;
-    caption.textContent = `Screen ${index + 1} of ${project.media.length}`;
+    img.alt = `${project.name} — ${t("screenOf", index + 1, project.media.length)}`;
+    caption.textContent = t("screenOf", index + 1, project.media.length);
     dots.textContent = `${index + 1} / ${project.media.length}`;
   }
 

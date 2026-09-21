@@ -3,6 +3,8 @@
  * focus restore. One modal open at a time.
  */
 
+import { t } from "./i18n.js";
+
 const root = document.getElementById("modal-root");
 let activeBackdrop = null;
 let lastFocused = null;
@@ -69,7 +71,7 @@ export function openModal({ title, bodyEl, onClose }) {
   const closeBtn = document.createElement("button");
   closeBtn.className = "modal__close";
   closeBtn.type = "button";
-  closeBtn.setAttribute("aria-label", "Close dialog");
+  closeBtn.setAttribute("aria-label", t("closeDialog"));
   closeBtn.textContent = "✕";
   closeBtn.addEventListener("click", () => closeModal());
   header.appendChild(closeBtn);

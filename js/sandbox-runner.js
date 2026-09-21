@@ -12,6 +12,8 @@
  * keys — never wire a real API key into anything executed in this sandbox.
  */
 
+import { t } from "./i18n.js";
+
 const PYODIDE_CDN = "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js";
 
 let pyodideReadyPromise = null;
@@ -54,12 +56,12 @@ export function buildPythonSandbox(project) {
   const status = document.createElement("span");
   status.className = "sandbox-status";
   status.dataset.state = "idle";
-  status.innerHTML = `<span class="sandbox-status__dot"></span><span class="sandbox-status__label">Idle — click Run</span>`;
+  status.innerHTML = `<span class="sandbox-status__dot"></span><span class="sandbox-status__label">${t("sandboxIdle")}</span>`;
 
   const runBtn = document.createElement("button");
   runBtn.className = "btn btn--primary btn--sm";
   runBtn.type = "button";
-  runBtn.textContent = "▶ Run";
+  runBtn.textContent = t("runCode");
 
   toolbar.append(status, runBtn);
 
@@ -67,12 +69,12 @@ export function buildPythonSandbox(project) {
   editor.className = "code-editor";
   editor.spellcheck = false;
   editor.value = project.sandbox.demoCode;
-  editor.setAttribute("aria-label", "Python code — editable");
+  editor.setAttribute("aria-label", t("pythonCodeLabel"));
 
   const terminal = document.createElement("div");
   terminal.className = "terminal";
   terminal.setAttribute("role", "log");
-  appendLine(terminal, "$ ready. click Run to execute in an in-browser Python runtime (Pyodide/WASM).");
+  appendLine(terminal, t("sandboxReadyLine"));
 
   function setStatus(state, label) {
     status.dataset.state = state;
@@ -85,12 +87,12 @@ export function buildPythonSandbox(project) {
     const start = performance.now();
 
     try {
-      setStatus("loading", "Booting Python runtime…");
-      appendLine(terminal, "$ booting pyodide (first run only, cached after)…");
+      setStatus("loading", t("bootingRuntime"));
+      appendLine(terminal, t("bootingRuntimeLine"));
       const pyodide = await getPyodide();
 
-      setStatus("loading", "Running…");
-      appendLine(terminal, "$ running…");
+      setStatus("loading", t("running"));
+      appendLine(terminal, t("runningLine"));
 
       let stdout = "";
       let stderr = "";
@@ -102,11 +104,11 @@ export function buildPythonSandbox(project) {
       const ms = Math.round(performance.now() - start);
       if (stdout) appendLine(terminal, stdout.trimEnd(), "ok");
       if (stderr) appendLine(terminal, stderr.trimEnd(), "err");
-      appendLine(terminal, `$ done in ${ms}ms`);
-      setStatus("ready", `Done in ${ms}ms`);
+      appendLine(terminal, t("doneInLine", ms));
+      setStatus("ready", t("doneIn", ms));
     } catch (err) {
       appendLine(terminal, String(err), "err");
-      setStatus("error", "Error — see output");
+      setStatus("error", t("errorSeeOutput"));
     } finally {
       runBtn.disabled = false;
     }

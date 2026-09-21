@@ -1,14 +1,17 @@
-import { projects, earlierWork, CAPABILITY } from "./projects-data.js";
+import { projects, earlierWork, CAPABILITY, localizeProject } from "./projects-data.js";
 import { hydrateProjectsWithGitHubData } from "./github-service.js";
 import { openModal, buildTabs } from "./modal-manager.js";
 import { buildWebPreview, buildDeviceCarousel } from "./device-preview.js";
 import { buildPythonSandbox } from "./sandbox-runner.js";
+import { getLang, setLang, onLangChange, applyStaticTranslations, t } from "./i18n.js";
 
 const grid = document.getElementById("project-grid");
 const earlierWorkList = document.getElementById("earlier-work-list");
 const searchInput = document.getElementById("search-input");
 const filterTabs = document.getElementById("filter-tabs");
 const themeToggle = document.getElementById("theme-toggle");
+const langToggle = document.getElementById("lang-toggle");
+const langToggleLabel = document.getElementById("lang-toggle-label");
 
 let activeFilter = "all";
 let activeQuery = "";
@@ -26,8 +29,30 @@ function isDarkActive() {
 function syncThemeToggleA11y() {
   const dark = isDarkActive();
   themeToggle.setAttribute("aria-pressed", String(dark));
-  themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  themeToggle.setAttribute("aria-label", dark ? t("switchToLight") : t("switchToDark"));
 }
+
+/* ---------------------------------------------------------------------- */
+/* Language                                                                 */
+/* ---------------------------------------------------------------------- */
+
+function syncLangToggle() {
+  const lang = getLang();
+  langToggleLabel.textContent = lang === "en" ? "ES" : "EN";
+  langToggle.setAttribute("aria-label", t("langToggleLabel"));
+}
+
+langToggle.addEventListener("click", () => {
+  setLang(getLang() === "en" ? "es" : "en");
+});
+
+onLangChange(() => {
+  applyStaticTranslations();
+  syncLangToggle();
+  syncThemeToggleA11y();
+  renderGrid();
+  renderEarlierWork();
+});
 
 function initTheme() {
   try {
@@ -62,7 +87,7 @@ function requirementsDrawer(requirements) {
   const details = document.createElement("details");
   details.className = "requirements";
   const summary = document.createElement("summary");
-  summary.textContent = "Device & System Requirements";
+  summary.textContent = t("deviceRequirements");
   const dl = document.createElement("dl");
   Object.entries(requirements).forEach(([key, value]) => {
     const dt = document.createElement("dt");
@@ -92,44 +117,44 @@ function launchAction(project) {
   btn.type = "button";
 
   if (project.capability === "sandbox") {
-    setBtnLabel(btn, "▶", "Launch Sandbox");
+    setBtnLabel(btn, "▶", t("launchSandbox"));
     btn.addEventListener("click", () => {
       openModal({
-        title: `${project.name} — Sandbox`,
+        title: `${project.name} — ${t("modalSandboxSuffix")}`,
         bodyEl: buildPythonSandbox(project),
       });
     });
   } else if (project.capability === "webEmbed") {
-    setBtnLabel(btn, "🌐", "Launch Preview");
+    setBtnLabel(btn, "🌐", t("launchPreview"));
     btn.addEventListener("click", () => {
       openModal({
-        title: `${project.name} — Live Preview`,
+        title: `${project.name} — ${t("modalPreviewSuffix")}`,
         bodyEl: buildWebPreview(project),
       });
     });
   } else if (project.capability === "devicePreview") {
-    setBtnLabel(btn, "📱", "Inspect");
+    setBtnLabel(btn, "📱", t("inspect"));
     btn.addEventListener("click", () => {
       openModal({
-        title: `${project.name} — Device Preview`,
+        title: `${project.name} — ${t("modalDeviceSuffix")}`,
         bodyEl: buildAndroidModalBody(project),
       });
     });
   } else if (project.capability === "notebook") {
     btn.className = "btn btn--ghost btn--sm";
-    setBtnLabel(btn, "📓", "View Report");
+    setBtnLabel(btn, "📓", t("viewReport"));
     btn.addEventListener("click", () => {
       openModal({
-        title: `${project.name} — Report`,
+        title: `${project.name} — ${t("modalReportSuffix")}`,
         bodyEl: buildManualDetailsBody(project),
       });
     });
   } else {
     btn.className = "btn btn--ghost btn--sm";
-    setBtnLabel(btn, "◆", "Details");
+    setBtnLabel(btn, "◆", t("details"));
     btn.addEventListener("click", () => {
       openModal({
-        title: `${project.name} — Details`,
+        title: `${project.name} — ${t("modalDetailsSuffix")}`,
         bodyEl: buildManualDetailsBody(project),
       });
     });
@@ -137,7 +162,8 @@ function launchAction(project) {
   return btn;
 }
 
-function buildAndroidModalBody(project) {
+function buildAndroidModalBody(rawProject) {
+  const project = localizeProject(rawProject, getLang());
   const wrap = document.createElement("div");
   const carouselPanel = document.createElement("div");
   carouselPanel.appendChild(buildDeviceCarousel(project));
@@ -149,19 +175,20 @@ function buildAndroidModalBody(project) {
   detailsPanel.appendChild(requirementsDrawer(project.requirements));
 
   const { tabsEl, panelsEl } = buildTabs([
-    { id: "screens", label: "Screens", panel: carouselPanel },
-    { id: "details", label: "Architecture & Requirements", panel: detailsPanel },
+    { id: "screens", label: t("tabScreens"), panel: carouselPanel },
+    { id: "details", label: t("tabArchitecture"), panel: detailsPanel },
   ]);
 
   wrap.append(tabsEl, panelsEl);
   return wrap;
 }
 
-function buildManualDetailsBody(project) {
+function buildManualDetailsBody(rawProject) {
+  const project = localizeProject(rawProject, getLang());
   const wrap = document.createElement("div");
   const img = document.createElement("img");
   img.src = project.media[0];
-  img.alt = `${project.name} screenshot`;
+  img.alt = `${project.name} ${t("projectScreenshotAlt")}`;
   img.style.borderRadius = "var(--radius-md)";
   img.style.marginBottom = "var(--space-4)";
   const p = document.createElement("p");
@@ -179,7 +206,7 @@ function createProjectCard(project) {
   media.className = "project-card__media";
   const img = document.createElement("img");
   img.src = project.media[0];
-  img.alt = `${project.name} preview`;
+  img.alt = `${project.name} ${t("projectPreviewAlt")}`;
   img.loading = "lazy";
   media.appendChild(img);
 
@@ -197,7 +224,7 @@ function createProjectCard(project) {
   const capability = CAPABILITY[project.capability];
   const capabilityEl = document.createElement("span");
   capabilityEl.className = "capability";
-  capabilityEl.innerHTML = `<span aria-hidden="true">${capability.icon}</span> ${capability.label}`;
+  capabilityEl.innerHTML = `<span aria-hidden="true">${capability.icon}</span> ${capability.label[getLang()]}`;
 
   const pillRow = document.createElement("div");
   pillRow.className = "pill-row";
@@ -230,7 +257,7 @@ function createProjectCard(project) {
     codeLink.href = project.github;
     codeLink.target = "_blank";
     codeLink.rel = "noopener";
-    codeLink.textContent = "View Code";
+    codeLink.textContent = t("viewCode");
     footer.appendChild(codeLink);
   }
 
@@ -243,7 +270,7 @@ function makeGithubMetaPill(project) {
   const pill = document.createElement("span");
   pill.className = "pill pill--muted";
   pill.dataset.role = "gh-meta";
-  pill.textContent = project.isPrivate ? "🔒 Private repository" : "GitHub · syncing…";
+  pill.textContent = project.isPrivate ? t("privateRepository") : t("githubSyncing");
   return pill;
 }
 
@@ -271,12 +298,13 @@ function matchesFilter(project) {
 }
 
 function renderGrid() {
-  const visible = projects.filter(matchesFilter);
+  const lang = getLang();
+  const visible = projects.map((p) => localizeProject(p, lang)).filter(matchesFilter);
   grid.innerHTML = "";
   if (visible.length === 0) {
     const empty = document.createElement("div");
     empty.className = "empty-state";
-    empty.textContent = "No projects match that search/filter.";
+    empty.textContent = t("noMatch");
     grid.appendChild(empty);
     return;
   }
@@ -326,6 +354,8 @@ document.addEventListener("keydown", (e) => {
 /* Boot                                                                     */
 /* ---------------------------------------------------------------------- */
 
+applyStaticTranslations();
+syncLangToggle();
 initTheme();
 renderGrid();
 renderEarlierWork();
