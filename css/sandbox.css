@@ -24,7 +24,7 @@
   width: min(920px, 100%);
   max-height: min(88vh, 820px);
   background: var(--surface-1);
-  border: 1px solid var(--border-hairline);
+  border: var(--hairline) solid var(--border-hairline-strong);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-tablet-hover);
   display: flex;
@@ -43,8 +43,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid var(--border-hairline);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: var(--hairline) solid var(--border-hairline-strong);
 }
 
 .modal__title {
@@ -57,13 +57,16 @@
 
 .modal__close {
   background: transparent;
-  border: 1px solid var(--border-hairline-strong);
-  border-radius: 50%;
+  border: var(--hairline) solid var(--border-hairline-strong);
+  border-radius: 0;
   width: 2rem;
   height: 2rem;
   cursor: pointer;
+  font-family: var(--font-mono);
   font-size: 1rem;
   line-height: 1;
+  transition: border-color var(--dur-fast) var(--ease-film),
+    color var(--dur-fast) var(--ease-film);
 }
 
 .modal__close:hover {
@@ -75,7 +78,7 @@
   display: flex;
   gap: var(--space-1);
   padding: var(--space-3) var(--space-5) 0;
-  border-bottom: 1px solid var(--border-hairline);
+  border-bottom: var(--hairline) solid var(--border-hairline-strong);
 }
 
 .modal__tab {
@@ -83,7 +86,10 @@
   border: none;
   border-bottom: 2px solid transparent;
   padding: var(--space-2) var(--space-3) var(--space-3);
-  font-size: var(--fs-small);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink-2);
   cursor: pointer;
 }
@@ -149,8 +155,8 @@
   resize: vertical;
   background: var(--surface-2);
   color: var(--ink-0);
-  border: 1px solid var(--border-hairline-strong);
-  border-radius: var(--radius-md);
+  border: var(--hairline) solid var(--border-hairline-strong);
+  border-radius: 0;
   padding: var(--space-4);
   font-family: var(--font-mono);
   font-size: 0.875rem;
@@ -162,7 +168,8 @@
   margin-top: var(--space-4);
   background: #211d1a;
   color: #e8dfc9;
-  border-radius: var(--radius-md);
+  border: var(--hairline) solid var(--border-hairline-strong);
+  border-radius: 0;
   padding: var(--space-4);
   font-family: var(--font-mono);
   font-size: 0.82rem;
@@ -187,15 +194,27 @@
 }
 
 .viewport-switcher button {
-  border: 1px solid var(--border-hairline-strong);
-  background: var(--surface-1);
-  border-radius: var(--radius-sm);
-  padding: 0.35rem 0.7rem;
+  border: var(--hairline) solid var(--border-hairline-strong);
+  background: transparent;
+  color: var(--ink-1);
+  border-radius: 0;
+  padding: 0.45rem 0.8rem;
+  font-family: var(--font-mono);
   font-size: var(--fs-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-film),
+    color var(--dur-fast) var(--ease-film);
 }
 
-.viewport-switcher button[aria-pressed="true"] {
+.viewport-switcher button:hover {
+  border-color: var(--accent-terracotta);
+  color: var(--accent-terracotta-text);
+}
+
+.viewport-switcher button[aria-pressed="true"],
+.viewport-switcher button[aria-pressed="true"]:hover {
   background: var(--accent-brass);
   /* Fixed dark ink, not #fbf6ec white — white-on-brass only hits 2.9:1,
      well under WCAG AA. See PHASE.md Phase 6. */
@@ -205,8 +224,8 @@
 
 .viewport-frame {
   margin-top: var(--space-4);
-  border: 1px solid var(--border-hairline-strong);
-  border-radius: var(--radius-md);
+  border: var(--hairline) solid var(--border-hairline-strong);
+  border-radius: 0;
   overflow: hidden;
   background: var(--surface-2);
   transition: max-width var(--dur-base) var(--ease-film);
@@ -253,15 +272,23 @@
 
 .carousel__controls button {
   background: transparent;
-  border: 1px solid var(--border-hairline-strong);
-  border-radius: 50%;
+  border: var(--hairline) solid var(--border-hairline-strong);
+  border-radius: 0;
   width: 2.25rem;
   height: 2.25rem;
+  font-family: var(--font-mono);
   cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-film);
+}
+
+.carousel__controls button:hover {
+  border-color: var(--accent-terracotta);
 }
 
 .carousel__caption {
-  font-size: var(--fs-small);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
   color: var(--ink-2);
   text-align: center;
   max-width: 40ch;

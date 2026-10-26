@@ -72,7 +72,7 @@ export function openModal({ title, bodyEl, onClose }) {
   closeBtn.className = "modal__close";
   closeBtn.type = "button";
   closeBtn.setAttribute("aria-label", t("closeDialog"));
-  closeBtn.textContent = "✕";
+  closeBtn.textContent = "×";
   closeBtn.addEventListener("click", () => closeModal());
   header.appendChild(closeBtn);
 

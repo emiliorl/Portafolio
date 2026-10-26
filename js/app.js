@@ -12,6 +12,7 @@ const filterTabs = document.getElementById("filter-tabs");
 const themeToggle = document.getElementById("theme-toggle");
 const langToggle = document.getElementById("lang-toggle");
 const langToggleLabel = document.getElementById("lang-toggle-label");
+const frameCounter = document.getElementById("frame-counter");
 
 let activeFilter = "all";
 let activeQuery = "";
@@ -79,10 +80,6 @@ themeToggle.addEventListener("click", () => {
 /* Card rendering                                                          */
 /* ---------------------------------------------------------------------- */
 
-function pillToneClass(tone) {
-  return tone && tone !== "muted" ? `pill--${tone}` : "pill--muted";
-}
-
 function requirementsDrawer(requirements) {
   const details = document.createElement("details");
   details.className = "requirements";
@@ -100,15 +97,14 @@ function requirementsDrawer(requirements) {
   return details;
 }
 
-/** Sets a button's label as an aria-hidden decorative icon + real text,
- * so screen readers announce just the label — not the emoji's Unicode
- * name spoken inline ("play button Launch Sandbox"). */
-function setBtnLabel(btn, icon, label) {
-  btn.innerHTML = "";
-  const iconEl = document.createElement("span");
-  iconEl.setAttribute("aria-hidden", "true");
-  iconEl.textContent = icon;
-  btn.append(iconEl, document.createTextNode(" " + label));
+/** Sets a button's label followed by an aria-hidden arrow, so screen readers
+ * announce just the label. */
+function setBtnLabel(btn, label) {
+  btn.textContent = label + " ";
+  const arrow = document.createElement("span");
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = "→";
+  btn.appendChild(arrow);
 }
 
 function launchAction(project) {
@@ -117,7 +113,7 @@ function launchAction(project) {
   btn.type = "button";
 
   if (project.capability === "sandbox") {
-    setBtnLabel(btn, "▶", t("launchSandbox"));
+    setBtnLabel(btn, t("launchSandbox"));
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — ${t("modalSandboxSuffix")}`,
@@ -125,7 +121,7 @@ function launchAction(project) {
       });
     });
   } else if (project.capability === "webEmbed") {
-    setBtnLabel(btn, "🌐", t("launchPreview"));
+    setBtnLabel(btn, t("launchPreview"));
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — ${t("modalPreviewSuffix")}`,
@@ -133,7 +129,7 @@ function launchAction(project) {
       });
     });
   } else if (project.capability === "devicePreview") {
-    setBtnLabel(btn, "📱", t("inspect"));
+    setBtnLabel(btn, t("inspect"));
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — ${t("modalDeviceSuffix")}`,
@@ -142,7 +138,7 @@ function launchAction(project) {
     });
   } else if (project.capability === "notebook") {
     btn.className = "btn btn--ghost btn--sm";
-    setBtnLabel(btn, "📓", t("viewReport"));
+    setBtnLabel(btn, t("viewReport"));
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — ${t("modalReportSuffix")}`,
@@ -151,7 +147,7 @@ function launchAction(project) {
     });
   } else {
     btn.className = "btn btn--ghost btn--sm";
-    setBtnLabel(btn, "◆", t("details"));
+    setBtnLabel(btn, t("details"));
     btn.addEventListener("click", () => {
       openModal({
         title: `${project.name} — ${t("modalDetailsSuffix")}`,
@@ -197,13 +193,39 @@ function buildManualDetailsBody(rawProject) {
   return wrap;
 }
 
+const MODE_TONE = {
+  sandbox: "live",
+  webEmbed: "live",
+  devicePreview: "preview",
+  notebook: "preview",
+  manual: "simulated",
+};
+
+const pad2 = (n) => String(n).padStart(2, "0");
+
 function createProjectCard(project) {
   const card = document.createElement("article");
-  card.className = "project-card";
+  card.className = "exhibit registered";
   card.dataset.id = project.id;
 
+  const exposure = projects.findIndex((p) => p.id === project.id) + 1;
+  const capability = CAPABILITY[project.capability];
+
+  const strip = document.createElement("div");
+  strip.className = "exhibit__strip";
+  const index = document.createElement("span");
+  index.innerHTML = `EXP. <b>${pad2(exposure)}</b>`;
+  const category = document.createElement("span");
+  category.textContent = project.category;
+  strip.append(index, category);
+
+  const mode = document.createElement("span");
+  mode.className = "mode";
+  mode.innerHTML = `<span class="mode__dot mode__dot--${MODE_TONE[project.capability] ?? "preview"}" aria-hidden="true"></span>`;
+  mode.append(capability.label[getLang()]);
+
   const media = document.createElement("div");
-  media.className = "project-card__media";
+  media.className = "exhibit__media";
   const img = document.createElement("img");
   img.src = project.media[0];
   img.alt = `${project.name} ${t("projectPreviewAlt")}`;
@@ -211,44 +233,43 @@ function createProjectCard(project) {
   media.appendChild(img);
 
   const body = document.createElement("div");
-  body.className = "project-card__body";
+  body.className = "exhibit__body";
 
   const title = document.createElement("h3");
-  title.className = "project-card__title";
+  title.className = "exhibit__title";
   title.textContent = project.name;
 
   const tagline = document.createElement("p");
-  tagline.className = "project-card__tagline";
+  tagline.className = "exhibit__tagline";
   tagline.textContent = project.tagline;
 
-  const capability = CAPABILITY[project.capability];
-  const capabilityEl = document.createElement("span");
-  capabilityEl.className = "capability";
-  capabilityEl.innerHTML = `<span aria-hidden="true">${capability.icon}</span> ${capability.label[getLang()]}`;
-
-  const pillRow = document.createElement("div");
-  pillRow.className = "pill-row";
+  const stack = document.createElement("span");
+  stack.className = "stack";
   project.languages.forEach((lang) => {
-    const pill = document.createElement("span");
-    pill.className = `pill ${pillToneClass(lang.tone)}`;
+    const item = document.createElement("span");
+    item.className = "stack__item";
     if (lang.icon) {
       const icon = document.createElement("img");
       icon.className = "pill__icon";
       icon.src = `assets/icons/${lang.icon}.svg`;
       icon.alt = "";
       icon.loading = "lazy";
-      pill.appendChild(icon);
+      item.appendChild(icon);
     }
-    pill.appendChild(document.createTextNode(lang.label));
-    pillRow.appendChild(pill);
+    item.appendChild(document.createTextNode(lang.label));
+    stack.appendChild(item);
   });
 
-  const metaRow = document.createElement("div");
-  metaRow.className = "pill-row";
-  metaRow.appendChild(makeGithubMetaPill(project));
+  const spec = document.createElement("dl");
+  spec.className = "spec";
+  spec.append(
+    specRow(t("specMode"), mode),
+    specRow(t("specStack"), stack),
+    specRow(t("specSource"), makeGithubMeta(project)),
+  );
 
   const footer = document.createElement("div");
-  footer.className = "project-card__footer";
+  footer.className = "exhibit__footer";
   footer.appendChild(launchAction(project));
 
   if (project.github) {
@@ -257,21 +278,34 @@ function createProjectCard(project) {
     codeLink.href = project.github;
     codeLink.target = "_blank";
     codeLink.rel = "noopener";
-    codeLink.textContent = t("viewCode");
+    codeLink.textContent = t("viewCode") + " ";
+    const arrow = document.createElement("span");
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "↗";
+    codeLink.appendChild(arrow);
     footer.appendChild(codeLink);
   }
 
-  body.append(title, tagline, pillRow, capabilityEl, metaRow, requirementsDrawer(project.requirements), footer);
-  card.append(media, body);
+  body.append(title, tagline, spec, requirementsDrawer(project.requirements), footer);
+  card.append(strip, media, body);
   return card;
 }
 
-function makeGithubMetaPill(project) {
-  const pill = document.createElement("span");
-  pill.className = "pill pill--muted";
-  pill.dataset.role = "gh-meta";
-  pill.textContent = project.isPrivate ? t("privateRepository") : t("githubSyncing");
-  return pill;
+function specRow(label, valueEl) {
+  const row = document.createElement("div");
+  const dt = document.createElement("dt");
+  dt.textContent = label;
+  const dd = document.createElement("dd");
+  dd.appendChild(valueEl);
+  row.append(dt, dd);
+  return row;
+}
+
+function makeGithubMeta(project) {
+  const el = document.createElement("span");
+  el.dataset.role = "gh-meta";
+  el.textContent = project.isPrivate ? t("privateRepository") : t("githubSyncing");
+  return el;
 }
 
 function updateCardGithubMeta(project) {
@@ -300,6 +334,7 @@ function matchesFilter(project) {
 function renderGrid() {
   const lang = getLang();
   const visible = projects.map((p) => localizeProject(p, lang)).filter(matchesFilter);
+  frameCounter.innerHTML = `<strong>${pad2(visible.length)}</strong> / ${pad2(projects.length)} ${t("exposures")}`;
   grid.innerHTML = "";
   if (visible.length === 0) {
     const empty = document.createElement("div");
@@ -359,5 +394,6 @@ syncLangToggle();
 initTheme();
 renderGrid();
 renderEarlierWork();
+document.getElementById("viewfinder-total").textContent = pad2(projects.length);
 document.getElementById("year").textContent = String(new Date().getFullYear());
 hydrateProjectsWithGitHubData(projects, updateCardGithubMeta);

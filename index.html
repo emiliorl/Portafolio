@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Emilio Ramirez — Portfolio</title>
-  <meta name="description" content="Full-stack developer portfolio — Python, TypeScript/React, and Kotlin/Android projects with live in-browser sandboxes and previews." />
+  <title>Emilio Ramirez — Full-Stack Systems &amp; Architecture</title>
+  <meta name="description" content="An open index of production web applications, Python tooling, and native Android interfaces by Emilio Ramirez — with live viewports, source architecture, and screen flows." />
   <meta name="color-scheme" content="light dark" />
 
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%9B%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23211d1a'/%3E%3Cpath d='M16 5v22M5 16h22' stroke='%23f2ece0' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%23b5502e' stroke-width='1.5'/%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="./css/main.css" />
   <link rel="stylesheet" href="./css/components.css" />
@@ -24,7 +24,7 @@
     <header class="site-header">
       <div class="container site-header__bar">
         <a class="brand" href="#main">
-          <span class="brand__mark">◆</span> Emilio Ramirez
+          <span class="brand__mark" aria-hidden="true">+</span> Emilio Ramirez
         </a>
         <nav class="site-nav" aria-label="Primary">
           <a href="#work" data-i18n="navWork">Work</a>
@@ -43,29 +43,42 @@
     </header>
 
     <main id="main">
-      <section class="section hero container">
-        <p class="eyebrow" data-i18n="eyebrow">Full-Stack Developer</p>
-        <h1 class="hero__title" data-i18n="heroTitle">Real projects, real code. See how they actually work.</h1>
-        <p class="hero__lede" data-i18n="heroLede">
-          A working showcase of Python, web, and Android projects. Preview live
-          web apps at any viewport, or step through a mobile app's screens. No
-          install required.
-        </p>
-        <div class="hero__actions">
-          <a class="btn btn--primary" href="#work" data-i18n="browseProjects">Browse Projects</a>
-          <a class="btn btn--ghost" href="https://github.com/emiliorl" target="_blank" rel="noopener" data-i18n="viewGithubProfile">View GitHub Profile</a>
+      <section class="hero container">
+        <div class="hero__text">
+          <p class="eyebrow" data-i18n="eyebrow">Full-Stack Systems &amp; Architecture</p>
+          <h1 class="hero__title">Emilio Ramirez</h1>
+          <p class="hero__tagline" data-i18n="heroTagline">Built with intention. Tested under load.</p>
+          <p class="hero__lede" data-i18n="heroLede">
+            An open index of production web applications, Python tooling, and
+            native Android interfaces. Select an exhibit below to inspect live
+            viewports, source architecture, and screen flows.
+          </p>
+          <div class="hero__actions">
+            <a class="link-arrow" href="#work" data-i18n="browseProjects">Open the index</a>
+            <a class="link-arrow" href="https://github.com/emiliorl" target="_blank" rel="noopener" data-i18n="viewGithubProfile">Source on GitHub</a>
+          </div>
+        </div>
+        <div class="viewfinder registered" aria-hidden="true">
+          <div class="viewfinder__row label"><span>Py</span><span>Web</span><span>And</span></div>
+          <div class="viewfinder__reticle"><span class="viewfinder__ring"></span></div>
+          <div class="viewfinder__row">
+            <span class="label" data-i18n="viewfinderLabel">Exhibits on file</span>
+            <span class="viewfinder__num" id="viewfinder-total">00</span>
+          </div>
         </div>
       </section>
 
       <section id="work" class="container">
+        <div class="section-head">
+          <h2 data-i18n="workHeading">Index of Work</h2>
+          <p class="counter" id="frame-counter"></p>
+        </div>
         <div class="toolbar">
           <div class="search-field">
-            <span class="search-field__icon" aria-hidden="true">⌕</span>
-            <label class="visually-hidden" for="search-input" data-i18n="searchLabel">Search projects</label>
-            <input id="search-input" type="search" placeholder="Search projects…" autocomplete="off" data-i18n-attr="placeholder:searchPlaceholder" />
-            <kbd>/</kbd>
+            <label for="search-input" data-i18n="searchLabel">Search the index</label>
+            <input id="search-input" type="search" placeholder="name, stack, keyword" autocomplete="off" data-i18n-attr="placeholder:searchPlaceholder" />
           </div>
-          <div class="filter-tabs" id="filter-tabs" role="group" aria-label="Filter by category">
+          <div class="filter-tabs" id="filter-tabs" role="group" aria-label="Filter by category" data-i18n-attr="aria-label:filterGroupLabel">
             <button class="filter-tab" type="button" data-filter="all" aria-pressed="true" data-i18n="filterAll">All</button>
             <button class="filter-tab" type="button" data-filter="python" aria-pressed="false" data-i18n="filterPython">Python</button>
             <button class="filter-tab" type="button" data-filter="web" aria-pressed="false" data-i18n="filterWeb">Web</button>
@@ -79,8 +92,10 @@
       </section>
 
       <section id="earlier-work" class="section container">
-        <h2 data-i18n="earlierWorkHeading">Earlier Work</h2>
-        <p class="hero__lede" style="max-width: 60ch" data-i18n="earlierWorkLede">
+        <div class="section-head">
+          <h2 data-i18n="earlierWorkHeading">Earlier Work</h2>
+        </div>
+        <p class="hero__lede" style="max-width: 60ch; margin-top: var(--space-4)" data-i18n="earlierWorkLede">
           Early student projects — kept for context, not actively maintained.
         </p>
         <div class="earlier-work" id="earlier-work-list">
@@ -90,7 +105,7 @@
     </main>
 
     <footer class="site-footer container">
-      <span>© <span id="year"></span> Emilio Ramirez</span>
+      <span>© <span id="year"></span> Emilio Ramirez · <span data-i18n="colophon">Set in Fraunces and IBM Plex Mono.</span></span>
       <span>
         <a href="mailto:emilio.alejandrorl19@gmail.com" data-i18n="footerEmail">Email</a>
         · <a href="https://github.com/emiliorl" target="_blank" rel="noopener">GitHub</a>
