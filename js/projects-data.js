@@ -13,7 +13,7 @@
  *   - generative-models-trio-01.png — composited from the notebooks' real output cells
  *     (VAE/DCGAN/Diffusion generated samples)
  *   - catdog-cnn-comparison-01.png  — the notebook's actual training-curves output cell
- *   - mindful-01..06.png        — the project's own screenshots/*.png from its GitHub repo
+ *   - mindful-01..05.png        — the project's own screenshots/*.png from its GitHub repo
  *   - ixmaoperations-01.png     — real screenshot of the live site (it blocks iframe
  *     embedding — see `embeddable` below — so this is what actually shows in the preview)
  * Still placeholder, pending a real asset from the user:
@@ -173,7 +173,6 @@ export const projects = [
       "assets/screenshots/mindful-03.png",
       "assets/screenshots/mindful-04.png",
       "assets/screenshots/mindful-05.png",
-      "assets/screenshots/mindful-06.png",
     ],
     isPrivate: false,
   },
